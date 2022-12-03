@@ -26,16 +26,18 @@ public class ServerStr {
 
     public void comunica(Socket client, ServerSocket server) {
         try {
+            System.out.println("Nuovo Thread creato");
             for (;;) {
-                System.out.println("Nuovo Thread creato");
                 BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 DataOutput outVersoClient = new DataOutputStream(client.getOutputStream());
                 String StringaRicevuta = inDalClient.readLine();
-                System.out.print("Stringa ricevuto: ");
+                //-----
+                System.out.print("Stringa ricevuta: ");
                 System.out.println(StringaRicevuta);
                 for (Socket c : ListaClient) {
-                    DataOutput out = new DataOutputStream(c.getOutputStream());
-                    out.writeBytes(StringaRicevuta + '\n');
+                    System.out.println("Inoltro messaggio");
+                    DataOutputStream out = new DataOutputStream(c.getOutputStream());
+                    out.writeBytes("TEST" + '\n');
                 }
             }
         } catch (Exception e) {
