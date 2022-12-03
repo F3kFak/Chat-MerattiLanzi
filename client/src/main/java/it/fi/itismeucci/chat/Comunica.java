@@ -25,6 +25,9 @@ public class Comunica {
         inDalServer = new BufferedReader(new InputStreamReader(miosocket.getInputStream()));
         Messaggio mexInviato = new Messaggio();
         Messaggio mexRicevuto = new Messaggio();
+
+
+
         for(;;)
         {
             System.out.println("Stringa ricevuta dal server: " + StringaRicevutaDalServer);
@@ -40,6 +43,8 @@ public class Comunica {
         {
             StringaRicevutaDalServer = inDalServer.readLine();
             System.out.println(StringaRicevutaDalServer);
+            /*utilizziamo il synchronized per attivare il thread di invio cosi da
+            ricevere il messaggio e poi si fu un notify per riattivare il thread*/
         }
     }
 

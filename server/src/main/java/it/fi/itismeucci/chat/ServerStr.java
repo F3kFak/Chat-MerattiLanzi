@@ -32,8 +32,7 @@ public class ServerStr {
                 DataOutput outVersoClient = new DataOutputStream(client.getOutputStream());
                 String StringaRicevuta = inDalClient.readLine();
                 //-----
-                System.out.print("Stringa ricevuta: ");
-                System.out.println(StringaRicevuta);
+                System.out.print("Stringa ricevuta: " + StringaRicevuta);
                 for (Socket c : ListaClient) {
                     System.out.println("Inoltro messaggio");
                     DataOutputStream out = new DataOutputStream(c.getOutputStream());
