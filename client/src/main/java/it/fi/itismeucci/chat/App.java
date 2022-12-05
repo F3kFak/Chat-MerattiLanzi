@@ -1,9 +1,12 @@
 package it.fi.itismeucci.chat;
 
+<<<<<<< HEAD
 /**
  * Hello world!
  *
  */
+=======
+>>>>>>> risolto chat comunicazione tra client
 public class App 
 {
     public static void main( String[] args )

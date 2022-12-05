@@ -12,6 +12,7 @@ public class Comunica {
     int portaServer = 6969; // porta
     Socket miosocket;
     BufferedReader tastiera; // buffer per l'input da tastiera
+<<<<<<< HEAD
     String StringaUtente; // stringa inserita da utente
     String StringaRicevutaDalServer = ""; // stringa ricevuta dal server
     DataOutputStream outVersoServer; // stream output
@@ -50,13 +51,47 @@ public class Comunica {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+=======
+    String stringaUtente; // stringa inserita da utente
+    String stringaRicevutaDalServer = ""; // stringa ricevuta dal server
+    DataOutputStream outVersoServer; // stream output
+    DataInputStream in;
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    Messaggio mexInviato = new Messaggio();
+    Messaggio mexRicevuto = new Messaggio();
+
+    public Comunica() throws IOException {
+        tastiera = new BufferedReader(new InputStreamReader(System.in));
+        miosocket = new Socket(nomeServer, portaServer);
+        outVersoServer = new DataOutputStream(miosocket.getOutputStream());
+        in = new DataInputStream(miosocket.getInputStream());
+    }
+
+    public void invio() throws IOException {
+        System.out.println("Client acceso...");
+        System.out.println("...Pronto a Scrivere...");
+        stringaUtente = tastiera.readLine();
+        outVersoServer.writeBytes(stringaUtente + '\n');
+    }
+
+    public void ricezione() throws IOException {
+        stringaRicevutaDalServer = in.readLine();
+        System.out.println(stringaRicevutaDalServer);
+    }
+
+>>>>>>> risolto chat comunicazione tra client
     public String serializzazione(Messaggio mexInviato) throws JsonProcessingException{
         String stringaSerializzata = objectMapper.writeValueAsString(mexInviato);
         return stringaSerializzata;
     }
 
     public Messaggio deserializzazione (String mexRicevuto) throws JsonMappingException, JsonProcessingException{
+<<<<<<< HEAD
         Messaggio stringaDeserializzata= objectMapper.readValue(mexRicevuto, Messaggio.class);
+=======
+        Messaggio stringaDeserializzata = objectMapper.readValue(mexRicevuto, Messaggio.class);
+>>>>>>> risolto chat comunicazione tra client
         return stringaDeserializzata;
     }
 }

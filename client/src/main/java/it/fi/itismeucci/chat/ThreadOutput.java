@@ -8,7 +8,13 @@ public class ThreadOutput extends Thread {
 
     public void run(){
         try {
+<<<<<<< HEAD
             comunica.invio();
+=======
+            for (;;) {
+                comunica.invio();
+            }
+>>>>>>> risolto chat comunicazione tra client
         } catch (Exception e) {}
     }
 }
