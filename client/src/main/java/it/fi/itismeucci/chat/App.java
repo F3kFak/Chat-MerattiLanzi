@@ -8,7 +8,8 @@ public class App
         try {
             cliente.comunica();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("Errore durante l'avvio del client");
+            System.out.println("Errore: " + e);
         }
     }
 }

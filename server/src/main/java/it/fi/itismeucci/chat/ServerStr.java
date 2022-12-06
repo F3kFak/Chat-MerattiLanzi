@@ -30,7 +30,7 @@ public class ServerStr {
             for (;;) {
                 BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String stringaRicevuta = inDalClient.readLine();
-                //--
+                
                 System.out.println("Stringa ricevuta: " + stringaRicevuta);
                 for (Socket c : listaClient) {
                     System.out.println("Inoltro messaggio a " + c);

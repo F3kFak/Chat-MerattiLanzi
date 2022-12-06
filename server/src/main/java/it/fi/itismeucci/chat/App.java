@@ -8,7 +8,8 @@ public class App
         try {
             servente.avvia();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("Errore durante l'avvio del server");
+            System.out.println("Errore: " + e);
         }
         
     }
