@@ -9,7 +9,7 @@ public class ServerStr {
     ArrayList<Socket>listaClient = new ArrayList<>();
 
     public void avvia() throws IOException {
-        System.out.println("1 Server partito in esecuzione ... ");
+        System.out.println("Server partito in esecuzione ... ");
         ServerSocket server = new ServerSocket(6969);
         for (;;) {
             Socket client;

@@ -30,8 +30,8 @@ public class Comunica {
     }
 
     public void invio() throws IOException {
+        System.out.println("Client acceso...");
         for (;;) {
-            System.out.println("Client acceso...");
             System.out.println("...Pronto a Scrivere...");
             stringaUtente = tastiera.readLine();
             outVersoServer.writeBytes(stringaUtente + '\n');
