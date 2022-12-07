@@ -27,10 +27,10 @@ public class Comunica {
         miosocket = new Socket(nomeServer, portaServer);
         outVersoServer = new DataOutputStream(miosocket.getOutputStream());
         in = new DataInputStream(miosocket.getInputStream());
+        System.out.println("Client acceso...");
     }
 
     public void invio() throws IOException {
-        System.out.println("Client acceso...");
         System.out.println("...Pronto a Scrivere...");
         stringaUtente = tastiera.readLine();
         outVersoServer.writeBytes(stringaUtente + '\n');
