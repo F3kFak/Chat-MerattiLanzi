@@ -16,7 +16,7 @@ public class Comunica {
     String stringaUtente; // stringa inserita da utente
     String stringaRicevutaDalServer = ""; // stringa ricevuta dal server
     DataOutputStream outVersoServer; // stream output
-    DataInputStream in;
+    BufferedReader in;
 
     ObjectMapper objectMapper = new ObjectMapper();
     Messaggio mexInviato = new Messaggio();
@@ -26,19 +26,23 @@ public class Comunica {
         tastiera = new BufferedReader(new InputStreamReader(System.in));
         miosocket = new Socket(nomeServer, portaServer);
         outVersoServer = new DataOutputStream(miosocket.getOutputStream());
-        in = new DataInputStream(miosocket.getInputStream());
+        in = new BufferedReader(new InputStreamReader(miosocket.getInputStream()));
     }
 
     public void invio() throws IOException {
-        System.out.println("Client acceso...");
-        System.out.println("...Pronto a Scrivere...");
-        stringaUtente = tastiera.readLine();
-        outVersoServer.writeBytes(stringaUtente + '\n');
+        for (;;) {
+            System.out.println("Client acceso...");
+            System.out.println("...Pronto a Scrivere...");
+            stringaUtente = tastiera.readLine();
+            outVersoServer.writeBytes(stringaUtente + '\n');
+        }
     }
 
     public void ricezione() throws IOException {
-        stringaRicevutaDalServer = in.readLine();
-        System.out.println(stringaRicevutaDalServer);
+        for (;;) {
+            stringaRicevutaDalServer = in.readLine();
+            System.out.println(stringaRicevutaDalServer);
+        }
     }
 
     public String serializzazione(Messaggio mexInviato) throws JsonProcessingException{

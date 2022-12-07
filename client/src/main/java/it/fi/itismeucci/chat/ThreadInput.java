@@ -9,9 +9,6 @@ public class ThreadInput extends Thread{
     public void run(){
         try {
             comunica.ricezione();
-            for (;;) {
-                comunica.ricezione();
-            }
         } catch (Exception e) {}
     }
 }

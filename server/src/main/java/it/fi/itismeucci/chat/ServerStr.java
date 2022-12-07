@@ -17,6 +17,7 @@ public class ServerStr {
                 client = server.accept();
                 Thread t = new Thread(() -> comunica(client, server));
                 t.start();
+                listaClient.add(client);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
@@ -30,7 +31,6 @@ public class ServerStr {
             for (;;) {
                 BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String stringaRicevuta = inDalClient.readLine();
-                //--
                 System.out.println("Stringa ricevuta: " + stringaRicevuta);
                 for (Socket c : listaClient) {
                     System.out.println("Inoltro messaggio a " + c);
