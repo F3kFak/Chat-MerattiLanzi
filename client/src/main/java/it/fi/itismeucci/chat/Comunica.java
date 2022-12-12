@@ -31,18 +31,16 @@ public class Comunica {
 
     public void invio() throws IOException {
         System.out.println("Client acceso...");
-        for (;;) {
-            System.out.println("...Pronto a Scrivere...");
-            stringaUtente = tastiera.readLine();
-            outVersoServer.writeBytes(stringaUtente + '\n');
-        }
+        System.out.println("...Pronto a Scrivere...");
+        stringaUtente = tastiera.readLine();
+        outVersoServer.writeBytes(stringaUtente + '\n');
     }
 
     public void ricezione() throws IOException {
-        for (;;) {
-            stringaRicevutaDalServer = in.readLine();
-            System.out.println(stringaRicevutaDalServer);
-        }
+        stringaRicevutaDalServer = in.readLine();
+        System.out.println(stringaRicevutaDalServer);
+
+        // cha faccio ? deserializza e in base a cosa ho ricevuto stampo .....
     }
 
     public String serializzazione(Messaggio mexInviato) throws JsonProcessingException{

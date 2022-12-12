@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class ServerStr {
     
-    ArrayList<Socket>listaClient = new ArrayList<>();
+    public static ArrayList<ClientHandler>listaClient = new ArrayList<>();
+    
 
     public void avvia() throws IOException {
         System.out.println("Server partito in esecuzione ... ");
@@ -15,9 +16,10 @@ public class ServerStr {
             Socket client;
             try {
                 client = server.accept();
+                boolean exists = false;
+                String a = registrazione(client);
                 Thread t = new Thread(() -> comunica(client, server));
                 t.start();
-                listaClient.add(client);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
@@ -43,5 +45,11 @@ public class ServerStr {
             System.exit(1);
         }
         // server.close();
+    }
+
+    public String registrazione(Socket client) throws IOException{
+        BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        String stringaRicevuta = inDalClient.readLine();
+        return stringaRicevuta;
     }
 }
