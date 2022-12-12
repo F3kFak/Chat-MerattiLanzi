@@ -9,12 +9,7 @@ public class ThreadOutput extends Thread {
     public void run(){
         try {
             for (;;) {
-
-
-                comunica.invio();
-
-
-
+                ClientStr.riceviMessaggio();
             }
         } catch (Exception e) {}
     }
