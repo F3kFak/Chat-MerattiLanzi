@@ -31,14 +31,14 @@ public class ClientHandler extends Thread {
     private ObjectMapper objectMapper;
     private Messaggio mexInviato;
     private String mexRicevuto;
-    private Login utente;
+    private Messaggio utente;
 
     public ClientHandler(){
         this.input = new BufferedReader(input);
         this.output = new DataOutputStream(output);
         this.objectMapper = new ObjectMapper();
         this.mexInviato = new Messaggio();
-        this.utente = new Login();
+        this.utente = new Messaggio();
     }
 
     public String getNomeUtente() {
@@ -50,10 +50,10 @@ public class ClientHandler extends Thread {
         boolean exists = false;
         do {
             //ricevo il messaggio e lo deserializzo
-            utente = riceviLogin(input.readLine());
+            utente = riceviMessaggio(input.readLine());
             for (ClientHandler c : ServerStr.listaClient) {
                 //controllo che il nome utente non sia esistente
-                if(utente.getUtente().equals(c.getNomeUtente())){
+                if(utente.getMittente().equals(c.getNomeUtente())){
                     exists = true;
                     mexInviato.setCorpo("Connessione riufutata, client già esistente");
                 }
@@ -128,17 +128,10 @@ public class ClientHandler extends Thread {
         output.writeBytes(stringaSerializzata + '\n');
     }
 
-    public Messaggio riceviMessaggio() {
+    public Messaggio riceviMessaggio(String mexRicevuto) {
         //deserializzo
         Messaggio stringaDeserializzata = objectMapper.readValue(mexRicevuto, Messaggio.class);
         //ritorno il l'istanza
-        return stringaDeserializzata;
-    }
-
-    public Login riceviLogin(String utente) throws JsonMappingException, JsonProcessingException{
-        //serializzo la login
-        Login stringaDeserializzata = objectMapper.readValue(utente, Login.class);
-        //ritorno la login
         return stringaDeserializzata;
     }
 

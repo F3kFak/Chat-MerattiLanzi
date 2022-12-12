@@ -4,18 +4,27 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Messaggio {
+    private String mittente;
     private String comando;
     private ArrayList<String> destinatario;
     private String corpo;
 
-
     public Messaggio() {
     }
 
-    public Messaggio(String comando, ArrayList<String> destinatario, String corpo) {
+    public Messaggio(String mittente, String comando, ArrayList<String> destinatario, String corpo) {
+        this.mittente = mittente;
         this.comando = comando;
         this.destinatario = destinatario;
         this.corpo = corpo;
+    }
+
+    public String getMittente() {
+        return this.mittente;
+    }
+
+    public void setMittente(String mittente) {
+        this.mittente = mittente;
     }
 
     public String getComando() {
@@ -42,6 +51,11 @@ public class Messaggio {
         this.corpo = corpo;
     }
 
+    public Messaggio mittente(String mittente) {
+        setMittente(mittente);
+        return this;
+    }
+
     public Messaggio comando(String comando) {
         setComando(comando);
         return this;
@@ -65,22 +79,22 @@ public class Messaggio {
             return false;
         }
         Messaggio messaggio = (Messaggio) o;
-        return Objects.equals(comando, messaggio.comando) && Objects.equals(destinatario, messaggio.destinatario) && Objects.equals(corpo, messaggio.corpo);
+        return Objects.equals(mittente, messaggio.mittente) && Objects.equals(comando, messaggio.comando) && Objects.equals(destinatario, messaggio.destinatario) && Objects.equals(corpo, messaggio.corpo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(comando, destinatario, corpo);
+        return Objects.hash(mittente, comando, destinatario, corpo);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " comando='" + getComando() + "'" +
+            " mittente='" + getMittente() + "'" +
+            ", comando='" + getComando() + "'" +
             ", destinatario='" + getDestinatario() + "'" +
             ", corpo='" + getCorpo() + "'" +
             "}";
     }
-    
 
 }
