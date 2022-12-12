@@ -47,20 +47,13 @@ public class ClientHandler extends Thread {
 
     @Override
     public void run() {
-        boolean exists = false;
-        do {
-            //ricevo il messaggio e lo deserializzo
-            utente = riceviMessaggio(input.readLine());
-            for (ClientHandler c : ServerStr.listaClient) {
-                //controllo che il nome utente non sia esistente
-                if(utente.getMittente().equals(c.getNomeUtente())){
-                    exists = true;
-                    mexInviato.setCorpo("Connessione riufutata, client già esistente");
-                }
-            }
-        } while (exists);
-
-
+        //si effettua la registrazione
+        registrazione();
+        //il client è entrato a far parte della chat
+        for ( ClientHandler c : ServerStr.listaClient) {
+            mexInviato.setMittente("Server");
+            mexInviato.setCorpo(nomeUtente + " si è unito alla chat!" + '\n');
+        }
     /* 
         1) Login
 
@@ -78,7 +71,7 @@ public class ClientHandler extends Thread {
         client va aggiunto alla lista
 
 
-        ClientHandler.listaClient.add(this);
+        ClientHandler.listaClient.add(this); 
 
 
         // chat
@@ -108,7 +101,7 @@ public class ClientHandler extends Thread {
             
 
 */
-        }
+    }
 
 
         
@@ -120,15 +113,41 @@ public class ClientHandler extends Thread {
 
         //ciclo+
 
+    public void registrazione() throws IOException{
+        boolean exists = false;
+        do {
+            System.out.println("Nuovo Thread creato");
+            //ricevo il messaggio e lo deserializzo
+            utente = riceviMessaggio(input.readLine());
+            for (ClientHandler c : ServerStr.listaClient) {
+                //controllo che il nome utente non sia esistente
+                if(utente.getMittente().equals(c.getNomeUtente())){
+                    //var impostata su true per ripetere il ciclo
+                    exists = true;
+                    //messaggio di errore
+                    mexInviato.setMittente("Server");
+                    mexInviato.setCorpo("Connessione rifiutata, client già esistente");
+                    //invio il messaggio al client
+                    inviaMessaggio(mexInviato);
+                    break;
+                }
+            }
+        } while (exists);
+        //il client non è un doppione
+        //aggiungo il client alla lista
+        ServerStr.listaClient.add(this);
+        //imposto il nome del client
+        nomeUtente = utente.getMittente();
+    }
 
-    public void inviaMessaggio(Messaggio mexInviato) throws JsonProcessingException{
+    public void inviaMessaggio(Messaggio mexInviato) throws IOException{
         //serializzo
         String stringaSerializzata = objectMapper.writeValueAsString(mexInviato);
         //scrivo il messaggio
         output.writeBytes(stringaSerializzata + '\n');
     }
 
-    public Messaggio riceviMessaggio(String mexRicevuto) {
+    public Messaggio riceviMessaggio(String mexRicevuto) throws JsonMappingException, JsonProcessingException {
         //deserializzo
         Messaggio stringaDeserializzata = objectMapper.readValue(mexRicevuto, Messaggio.class);
         //ritorno il l'istanza
@@ -154,4 +173,4 @@ public class ClientHandler extends Thread {
 
 
 
-Thread sia un istanza di oggetto che un thread
+//Thread sia un istanza di oggetto che un thread

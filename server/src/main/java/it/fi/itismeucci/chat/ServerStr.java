@@ -16,40 +16,12 @@ public class ServerStr {
             Socket client;
             try {
                 client = server.accept();
-                boolean exists = false;
-                String a = registrazione(client);
-                Thread t = new Thread(() -> comunica(client, server));
-                t.start();
+                ClientHandler newT = new ClientHandler();
+                newT.start();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
             }
         }
-    }
-
-    public void comunica(Socket client, ServerSocket server) {
-        try {
-            System.out.println("Nuovo Thread creato");
-            for (;;) {
-                BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                String stringaRicevuta = inDalClient.readLine();
-                System.out.println("Stringa ricevuta: " + stringaRicevuta);
-                for (Socket c : listaClient) {
-                    System.out.println("Inoltro messaggio a " + c);
-                    DataOutputStream out = new DataOutputStream(c.getOutputStream());
-                    out.writeBytes(stringaRicevuta + '\n');
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
-        // server.close();
-    }
-
-    public String registrazione(Socket client) throws IOException{
-        BufferedReader inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        String stringaRicevuta = inDalClient.readLine();
-        return stringaRicevuta;
     }
 }
