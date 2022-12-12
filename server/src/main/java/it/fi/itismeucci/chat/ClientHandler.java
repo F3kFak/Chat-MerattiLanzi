@@ -110,7 +110,6 @@ public class ClientHandler extends Thread {
     public void registrazione() throws IOException {
         boolean exists = false;
         do {
-            System.out.println("Nuovo Thread creato");
             // ricevo il messaggio e lo deserializzo
             utente = riceviMessaggio(input.readLine());
             for (ClientHandler c : ServerStr.listaClient) {

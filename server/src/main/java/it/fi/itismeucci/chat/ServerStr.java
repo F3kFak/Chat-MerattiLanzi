@@ -18,6 +18,7 @@ public class ServerStr {
                 client = server.accept();
                 ClientHandler newT = new ClientHandler();
                 newT.start();
+                System.out.println("Nuovo Thread creato");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
