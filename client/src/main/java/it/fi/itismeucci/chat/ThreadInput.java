@@ -9,7 +9,7 @@ public class ThreadInput extends Thread{
     public void run(){
         try {
             for (;;) {
-                ClientStr.inviaMessaggio();
+                ClientStr.threadInviaMessaggio();
             }
         } catch (Exception e) {}
     }

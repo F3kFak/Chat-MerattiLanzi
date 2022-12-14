@@ -6,9 +6,11 @@ public class App
     {
         try {
             ClientStr cliente = new ClientStr();
+            cliente.connect();
             //effettua la registrazione
             cliente.registra();
             //effettuo la comunicazione
+            System.out.println("Client acceso...");
             cliente.comunica();
         } catch (Exception e) {
             System.out.println("Errore durante l'avvio del client");

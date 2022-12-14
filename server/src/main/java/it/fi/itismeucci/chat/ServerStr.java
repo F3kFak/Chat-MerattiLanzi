@@ -11,17 +11,18 @@ public class ServerStr {
 
     public void avvia() throws IOException {
         System.out.println("Server partito in esecuzione ... ");
-        ServerSocket server = new ServerSocket(6969);
-        for (;;) {
-            Socket client;
-            try {
-                client = server.accept();
-                ClientHandler newT = new ClientHandler();
-                newT.start();
-                System.out.println("Nuovo Thread creato");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.exit(1);
+        try (ServerSocket server = new ServerSocket(6969)) {
+            for (;;) {
+                Socket client;
+                try {
+                    client = server.accept();
+                    ClientHandler newT = new ClientHandler(client);
+                    newT.start();
+                    System.out.println("Nuovo Thread creato");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    System.exit(1);
+                }
             }
         }
     }

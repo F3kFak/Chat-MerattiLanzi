@@ -9,7 +9,7 @@ public class ThreadOutput extends Thread {
     public void run(){
         try {
             for (;;) {
-                ClientStr.riceviMessaggio();
+                ClientStr.threadRiceviMessaggio();
             }
         } catch (Exception e) {}
     }

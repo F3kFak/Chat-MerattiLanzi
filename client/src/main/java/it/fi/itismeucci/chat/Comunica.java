@@ -3,18 +3,14 @@ package it.fi.itismeucci.chat;
 import java.io.*;
 import java.net.*;
 
-public class Comunica {
-    String nomeServer = "localhost"; // indirizzo server locale
-    int portaServer = 6969; // porta
-    Socket miosocket;
-    static BufferedReader tastiera; // buffer per l'input da tastiera
+public class Comunica extends ClientStr{
+    
+    public Comunica() throws IOException{
 
-    public Comunica() throws IOException {
-        this.tastiera = new BufferedReader(new InputStreamReader(System.in));
-        this.miosocket = new Socket(nomeServer, portaServer);
-        ClientStr.outVersoServer = new DataOutputStream(miosocket.getOutputStream());
-        ClientStr.inVersoServer = new BufferedReader(new InputStreamReader(miosocket.getInputStream()));
     }
+
+
+    
 
     /*
      * public void invio() throws IOException {

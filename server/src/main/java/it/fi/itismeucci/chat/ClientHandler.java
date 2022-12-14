@@ -3,13 +3,8 @@ package it.fi.itismeucci.chat;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-
-import javax.security.auth.login.LoginContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -23,8 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ClientHandler extends Thread {
 
-    private String nomeUtente;
     private Socket socket;
+    private String nomeUtente;
     private BufferedReader input;
     private DataOutputStream output;
     private ObjectMapper objectMapper;
@@ -32,9 +27,10 @@ public class ClientHandler extends Thread {
     private String mexRicevuto;
     private Messaggio utente;
 
-    public ClientHandler() {
-        this.input = new BufferedReader(input);
-        this.output = new DataOutputStream(output);
+    public ClientHandler(Socket socket) throws IOException {
+        this.socket = socket;
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.output = new DataOutputStream(socket.getOutputStream());
         this.objectMapper = new ObjectMapper();
         this.mexInviato = new Messaggio();
         this.utente = new Messaggio();
@@ -59,7 +55,7 @@ public class ClientHandler extends Thread {
         }
         catch(Exception e){
             System.out.println(e);
-            messaggioErrore("Errore nella notificazione del nuovo client")
+            messaggioErrore("Errore nella notificazione del nuovo client");
         }
         /*
          * 1) Login
@@ -117,11 +113,8 @@ public class ClientHandler extends Thread {
                 if (utente.getMittente().equals(c.getNomeUtente())) {
                     // var impostata su true per ripetere il ciclo
                     exists = true;
-                    // messaggio di errore
-                    mexInviato.setMittente("Server");
-                    mexInviato.setCorpo("Connessione rifiutata, client già esistente");
-                    // invio il messaggio al client
-                    inviaMessaggio(mexInviato);
+                    // invio messaggio di errore
+                    invioMessaggioServer("Connessione rifiutata, client già esistente");
                     break;
                 }
             }
@@ -144,6 +137,12 @@ public class ClientHandler extends Thread {
                 messaggioErrore("Errore nell'invio del messaggio dal server");
             }
         }
+    }
+
+    public void invioMessaggioServer(String mex) throws IOException{
+        mexInviato.setMittente("Server");
+        mexInviato.setCorpo(mex);
+        inviaMessaggio(mexInviato);
     }
 
     public void messaggioErrore(String err) {

@@ -11,6 +11,5 @@ public class App
             System.out.println("Errore durante l'avvio del server");
             System.out.println("Errore: " + e);
         }
-        
     }
 }
