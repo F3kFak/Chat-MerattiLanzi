@@ -47,11 +47,13 @@ public class ClientStr{
     
     public void registra() throws IOException{
         boolean entrato = true;
+        
         do{
             System.out.print("Inserisci nome: ");
             stringaUtente = tastiera.readLine();
             //serializzare in una classe
-            inviaMessaggio(stringaUtente);
+            mexInviato.setMittente(stringaUtente);
+            inviaMessaggio(mexInviato);
             //leggi la risposta (deserilizza)
             mexRicevuto = threadRiceviMessaggio();
             //controllo se sono entrato a far parte della chat
@@ -69,9 +71,9 @@ public class ClientStr{
         System.out.println(err);
     }
 
-    public void inviaMessaggio(String stringaUtente2) throws IOException {
+    public void inviaMessaggio(Messaggio mex) throws IOException {
         // serializzo
-        String stringaSerializzata = objectMapper.writeValueAsString(stringaUtente2);
+        String stringaSerializzata = objectMapper.writeValueAsString(mex);
         // scrivo il messaggio
         outVersoServer.writeBytes(stringaSerializzata + '\n');
     }

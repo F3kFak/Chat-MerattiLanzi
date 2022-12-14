@@ -44,39 +44,21 @@ public class ClientHandler extends Thread {
     public void run() {
         // si effettua la registrazione
         try {
-            registrazione();
+            registrazione(socket);
         } catch (IOException e) {
             System.out.println(e);
             messaggioErrore("Errore di registrazione");
         }
         //si notifica del nuovo client in chat
         try{
-            notificaClients();
+            notificaClients(socket);
         }
         catch(Exception e){
             System.out.println(e);
             messaggioErrore("Errore nella notificazione del nuovo client");
         }
         /*
-         * 1) Login
-         * 
-         * do
-         * leggi nome utente
-         * 
-         * invia Messaggio
-         * 
-         * ricevimessaggio
-         * 
-         * while ricevuto ok
-         * 
-         * this.nomeUtente = .....
-         * 
-         * client va aggiunto alla lista
-         * 
-         * 
-         * ClientHandler.listaClient.add(this);
-         * 
-         * 
+         *  
          * // chat
          * 
          * ricevimessaggio
@@ -103,11 +85,12 @@ public class ClientHandler extends Thread {
          */
     }
 
-    public void registrazione() throws IOException {
+    public void registrazione(Socket socket) throws IOException {
         boolean exists = false;
         do {
             // ricevo il messaggio e lo deserializzo
             utente = riceviMessaggio(input.readLine());
+            System.out.println("Utente connesso come: " + utente.getMittente());
             for (ClientHandler c : ServerStr.listaClient) {
                 // controllo che il nome utente non sia esistente
                 if (utente.getMittente().equals(c.getNomeUtente())) {
@@ -124,9 +107,10 @@ public class ClientHandler extends Thread {
         ServerStr.listaClient.add(this);
         // imposto il nome del client
         nomeUtente = utente.getMittente();
+        invioMessaggioServer("entrato");
     }
 
-    public void notificaClients() {
+    public void notificaClients(Socket socket) {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
