@@ -24,7 +24,7 @@ public class ClientHandler extends Thread {
     private DataOutputStream output;
     private ObjectMapper objectMapper;
     private Messaggio mexInviato;
-    private String mexRicevuto;
+    private Messaggio mexRicevuto;
     private Messaggio utente;
 
     public ClientHandler(Socket socket) throws IOException {
@@ -56,6 +56,15 @@ public class ClientHandler extends Thread {
         catch(Exception e){
             System.out.println(e);
             messaggioErrore("Errore nella notificazione del nuovo client");
+        }
+        //rivevi messaggi
+        try{
+            for(;;)
+            riceviMessaggio(input.readLine());
+        }
+        catch(Exception e){
+            System.out.println(e);
+            messaggioErrore("Nella ricezione del messaggio");
         }
         /*
          *  
@@ -89,7 +98,7 @@ public class ClientHandler extends Thread {
         boolean exists = false;
         do {
             // ricevo il messaggio e lo deserializzo
-            utente = riceviMessaggio(input.readLine());
+            utente = riceviMessaggioDes(input.readLine());
             System.out.println("Utente connesso come: " + utente.getMittente());
             for (ClientHandler c : ServerStr.listaClient) {
                 // controllo che il nome utente non sia esistente
@@ -107,7 +116,6 @@ public class ClientHandler extends Thread {
         ServerStr.listaClient.add(this);
         // imposto il nome del client
         nomeUtente = utente.getMittente();
-        invioMessaggioServer("entrato");
     }
 
     public void notificaClients(Socket socket) {
@@ -140,11 +148,16 @@ public class ClientHandler extends Thread {
         output.writeBytes(stringaSerializzata + '\n');
     }
 
-    public Messaggio riceviMessaggio(String mexRicevuto) throws JsonMappingException, JsonProcessingException {
+    public Messaggio riceviMessaggioDes(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException {
         // deserializzo
-        Messaggio stringaDeserializzata = objectMapper.readValue(mexRicevuto, Messaggio.class);
+        Messaggio stringaDeserializzata = objectMapper.readValue(messaggioRicevuto, Messaggio.class);
         // ritorno il l'istanza
         return stringaDeserializzata;
+    }
+
+    public void riceviMessaggio(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException{
+        mexRicevuto = riceviMessaggioDes(messaggioRicevuto);
+        if(mexRicevuto.getComando().equals(""))
     }
 
     /*

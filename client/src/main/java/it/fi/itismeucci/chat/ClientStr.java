@@ -3,6 +3,7 @@ package it.fi.itismeucci.chat;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -15,7 +16,7 @@ public class ClientStr{
     public String nomeServer = "localhost"; // indirizzo server locale
     public static BufferedReader tastiera; // buffer per l'input da tastiera
 
-    public static String stringaUtente; // stringa inserita da utente
+    public static String nomeClient; //nome del client
     public static String stringaRicevutaDalServer = ""; // stringa ricevuta dal server
     public static DataOutputStream outVersoServer; // stream output
     public static BufferedReader inVersoServer;
@@ -23,6 +24,7 @@ public class ClientStr{
     public static ObjectMapper objectMapper = new ObjectMapper();
     public static Messaggio mexInviato = new Messaggio();
     public static Messaggio mexRicevuto = new Messaggio();
+    public static ArrayList<String> destinatarioArrayList = new ArrayList<String>();
 
     public ClientStr() throws IOException {
         
@@ -50,9 +52,9 @@ public class ClientStr{
         
         do{
             System.out.print("Inserisci nome: ");
-            stringaUtente = tastiera.readLine();
+            nomeClient = tastiera.readLine();
             //serializzare in una classe
-            mexInviato.setMittente(stringaUtente);
+            mexInviato.setMittente(nomeClient);
             inviaMessaggio(mexInviato);
             //leggi la risposta (deserilizza)
             mexRicevuto = riceviMessaggio();
@@ -79,7 +81,7 @@ public class ClientStr{
         return stringaDeserializzata;
     }
 
-    public void inviaMessaggio(Messaggio mex) throws IOException {
+    public static void inviaMessaggio(Messaggio mex) throws IOException {
         // serializzo
         String stringaSerializzata = objectMapper.writeValueAsString(mex);
         // scrivo il messaggio
@@ -87,12 +89,31 @@ public class ClientStr{
     }
 
     public static void threadInviaMessaggio() throws IOException {
-        //legge il buffer della tastiera salva il valor e
-        stringaUtente = tastiera.readLine();
-        // serializzo
-        String stringaSerializzata = objectMapper.writeValueAsString(mexInviato);
-        // scrivo il messaggio serializzato
-        outVersoServer.writeBytes(stringaSerializzata + '\n');
+        mexInviato.setMittente(nomeClient);
+        System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
+        System.out.println("Seleziona l'opzione per il destinatario: ");
+        //seleziona l'opzione del destinatario
+        String opzione = tastiera.readLine();
+        //imposto il destinatario del messaggio ed il tipo di comando
+        switch(opzione){
+            case "1":
+                destinatarioArrayList.add("all");
+                mexInviato.setDestinatario(destinatarioArrayList);
+                mexInviato.setComando("1");
+                break;
+            case "2":
+                String destinatario = tastiera.readLine();
+                destinatarioArrayList.add(destinatario);
+                mexInviato.setDestinatario(destinatarioArrayList);
+                mexInviato.setComando("2");
+                break;
+        }
+        System.out.print("Inserisci il messaggio: ");
+        //scrivo il corpo del messaggio
+        String corpo = tastiera.readLine();
+        mexInviato.setCorpo(corpo);
+        //invio il messaggio al server
+        inviaMessaggio(mexInviato);
     }
 
     public static void threadRiceviMessaggio() throws IOException {
