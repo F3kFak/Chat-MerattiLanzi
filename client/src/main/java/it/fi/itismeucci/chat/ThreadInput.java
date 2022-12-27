@@ -1,9 +1,9 @@
 package it.fi.itismeucci.chat;
 
 public class ThreadInput extends Thread{
-    Comunica comunica;
-    public ThreadInput(Comunica comunica){
-        this.comunica = comunica;
+    ClientStr clientStr;
+    public ThreadInput(ClientStr clientstr){
+        this.clientStr = clientstr;
     }
 
     public void run(){

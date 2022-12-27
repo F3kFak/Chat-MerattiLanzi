@@ -114,9 +114,7 @@ public class ClientHandler extends Thread {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
-                mexInviato.setMittente("Server");
-                mexInviato.setCorpo(nomeUtente + " si è unito alla chat!" + '\n');
-                c.inviaMessaggio(mexInviato);
+                c.invioMessaggioServer(nomeUtente + " si e' unito alla chat!" + '\n');
             } catch (IOException e) {
                 messaggioErrore("Errore nell'invio del messaggio dal server");
             }

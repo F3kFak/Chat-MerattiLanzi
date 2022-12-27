@@ -29,7 +29,7 @@ public class ClientStr{
 	}
 
 	public void comunica() throws IOException {
-        Comunica C1 = new Comunica();
+        ClientStr C1 = new ClientStr();
         ThreadInput ti = new ThreadInput(C1);
         ThreadOutput to = new ThreadOutput(C1);
 
@@ -55,7 +55,7 @@ public class ClientStr{
             mexInviato.setMittente(stringaUtente);
             inviaMessaggio(mexInviato);
             //leggi la risposta (deserilizza)
-            mexRicevuto = threadRiceviMessaggio();
+            mexRicevuto = riceviMessaggio();
             //controllo se sono entrato a far parte della chat
             if(mexRicevuto.getMittente().equals("Server") && mexRicevuto.getCorpo().equals("entrato"))
                 entrato = false;
@@ -71,6 +71,14 @@ public class ClientStr{
         System.out.println(err);
     }
 
+    public static Messaggio riceviMessaggio() throws IOException{
+        //leggo il messaggio ricevuto dal server
+        stringaRicevutaDalServer = inVersoServer.readLine();
+        // deserializzo
+        Messaggio stringaDeserializzata = objectMapper.readValue(stringaRicevutaDalServer, Messaggio.class);
+        return stringaDeserializzata;
+    }
+
     public void inviaMessaggio(Messaggio mex) throws IOException {
         // serializzo
         String stringaSerializzata = objectMapper.writeValueAsString(mex);
@@ -79,7 +87,6 @@ public class ClientStr{
     }
 
     public static void threadInviaMessaggio() throws IOException {
-        System.out.println("...Pronto a Scrivere...");
         //legge il buffer della tastiera salva il valor e
         stringaUtente = tastiera.readLine();
         // serializzo
@@ -88,13 +95,14 @@ public class ClientStr{
         outVersoServer.writeBytes(stringaSerializzata + '\n');
     }
 
-    public static Messaggio threadRiceviMessaggio() throws IOException {
-        //leggo il messaggio ricevuto dal server
-        stringaRicevutaDalServer = inVersoServer.readLine();
-        // deserializzo
-        Messaggio stringaDeserializzata = objectMapper.readValue(stringaRicevutaDalServer, Messaggio.class);
-        // ritorno il l'istanza deserializzata
-        return stringaDeserializzata;
+    public static void threadRiceviMessaggio() throws IOException {
+        Messaggio stringaDeserializzata = riceviMessaggio();
+        if(stringaDeserializzata.getMittente().equals("Server"))
+            //messaggio di sistema
+            System.out.println(stringaDeserializzata.getCorpo());
+        else{
+            // messaggio da un altro client
+            System.out.println(stringaDeserializzata.getMittente() + ": " + stringaDeserializzata.getCorpo());
+        }
     }
-
 }
