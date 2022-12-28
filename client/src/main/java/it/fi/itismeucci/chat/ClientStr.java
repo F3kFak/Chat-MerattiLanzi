@@ -49,7 +49,7 @@ public class ClientStr{
     
     public void registra() throws IOException{
         boolean entrato = true;
-        
+
         do{
             System.out.print("Inserisci nome: ");
             nomeClient = tastiera.readLine();
@@ -123,7 +123,7 @@ public class ClientStr{
     public static void threadRiceviMessaggio() throws IOException {
         Messaggio stringaDeserializzata = riceviMessaggio();
         //messaggio dal server
-        if(stringaDeserializzata.getMittente().equals("Server")){
+        if(stringaDeserializzata.getMittente().equals("Server") && stringaDeserializzata.getComando().equals("0")){
             //messaggio di sistema
             System.out.println(stringaDeserializzata.getCorpo());
             System.out.println("");

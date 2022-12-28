@@ -140,6 +140,7 @@ public class ClientHandler extends Thread {
 
     public void messaggioErrore(String err) {
         mexInviato.setMittente("Server");
+        mexInviato.setComando("0");
         mexInviato.setCorpo(err);
         System.out.println(err);
     }
