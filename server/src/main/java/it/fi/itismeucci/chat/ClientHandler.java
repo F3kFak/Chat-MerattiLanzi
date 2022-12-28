@@ -116,12 +116,15 @@ public class ClientHandler extends Thread {
         ServerStr.listaClient.add(this);
         // imposto il nome del client
         nomeUtente = utente.getMittente();
+        //conferma da parte del server che il client si è connesso alla chat
+        invioMessaggioServer("entrato");
     }
 
     public void notificaClients(Socket socket) {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
+                if(!c.nomeUtente.equals(this.nomeUtente))
                 c.invioMessaggioServer(nomeUtente + " si e' unito alla chat!" + '\n');
             } catch (IOException e) {
                 messaggioErrore("Errore nell'invio del messaggio dal server");
@@ -157,24 +160,10 @@ public class ClientHandler extends Thread {
 
     public void riceviMessaggio(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException{
         mexRicevuto = riceviMessaggioDes(messaggioRicevuto);
-        if(mexRicevuto.getComando().equals(""))
+        //messaggio broadcast
+        if(mexRicevuto.getComando().equals("1"))
+
     }
 
-    /*
-     * public String serializzazionemex(Messaggio mexInviato) throws
-     * JsonProcessingException{
-     * String stringaSerializzata = objectMapper.writeValueAsString(mexInviato);
-     * return stringaSerializzata;
-     * }
-     * 
-     * public Messaggio deserializzazionemex(String mexRicevuto) throws
-     * JsonMappingException, JsonProcessingException{
-     * 
-     * Messaggio stringaDeserializzata = objectMapper.readValue(mexRicevuto,
-     * Messaggio.class);
-     * return stringaDeserializzata;
-     * }
-     */
 }
-
 // Thread sia un istanza di oggetto che un thread

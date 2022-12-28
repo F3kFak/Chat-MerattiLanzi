@@ -90,8 +90,7 @@ public class ClientStr{
 
     public static void threadInviaMessaggio() throws IOException {
         mexInviato.setMittente(nomeClient);
-        System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
-        System.out.println("Seleziona l'opzione per il destinatario: ");
+        menuOpzioni();
         //seleziona l'opzione del destinatario
         String opzione = tastiera.readLine();
         //imposto il destinatario del messaggio ed il tipo di comando
@@ -125,5 +124,11 @@ public class ClientStr{
             // messaggio da un altro client
             System.out.println(stringaDeserializzata.getMittente() + ": " + stringaDeserializzata.getCorpo());
         }
+        menuOpzioni();
+    }
+
+    public static void menuOpzioni() throws IOException{
+        System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
+        System.out.println("Seleziona l'opzione per il destinatario: ");
     }
 }
