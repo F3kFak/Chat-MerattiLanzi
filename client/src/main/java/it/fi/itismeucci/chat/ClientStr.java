@@ -101,10 +101,15 @@ public class ClientStr{
                 mexInviato.setComando("1");
                 break;
             case "2":
+                //TOFIX
                 String destinatario = tastiera.readLine();
+                destinatarioArrayList.clear();
                 destinatarioArrayList.add(destinatario);
                 mexInviato.setDestinatario(destinatarioArrayList);
                 mexInviato.setComando("2");
+                break;
+            default:
+                System.out.println("Opzione non valida");
                 break;
         }
         System.out.print("Inserisci il messaggio: ");
@@ -117,17 +122,27 @@ public class ClientStr{
 
     public static void threadRiceviMessaggio() throws IOException {
         Messaggio stringaDeserializzata = riceviMessaggio();
-        if(stringaDeserializzata.getMittente().equals("Server"))
+        //messaggio dal server
+        if(stringaDeserializzata.getMittente().equals("Server")){
             //messaggio di sistema
             System.out.println(stringaDeserializzata.getCorpo());
-        else{
-            // messaggio da un altro client
+            System.out.println("");
+        }
+        // messaggio in broadcast da un altro client
+        else if(stringaDeserializzata.getComando().equals("1")){
+            System.out.println(stringaDeserializzata.getMittente() + " ha scritto a tutti: " + stringaDeserializzata.getCorpo());
+            System.out.println("");
+        }
+        // messaggio privato da un altro client
+        else if(stringaDeserializzata.getComando().equals("2")){
             System.out.println(stringaDeserializzata.getMittente() + ": " + stringaDeserializzata.getCorpo());
+            System.out.println("");
         }
         menuOpzioni();
     }
 
     public static void menuOpzioni() throws IOException{
+        System.out.println("--------------Menu---------------");
         System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
         System.out.println("Seleziona l'opzione per il destinatario: ");
     }

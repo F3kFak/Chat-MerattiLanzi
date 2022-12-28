@@ -51,7 +51,7 @@ public class ClientHandler extends Thread {
         }
         //si notifica del nuovo client in chat
         try{
-            notificaClients(socket);
+            messaggioBC(socket, nomeUtente + " si e' unito alla chat!");
         }
         catch(Exception e){
             System.out.println(e);
@@ -98,7 +98,7 @@ public class ClientHandler extends Thread {
         boolean exists = false;
         do {
             // ricevo il messaggio e lo deserializzo
-            utente = riceviMessaggioDes(input.readLine());
+            utente = deserializzaMessaggio(input.readLine());
             System.out.println("Utente connesso come: " + utente.getMittente());
             for (ClientHandler c : ServerStr.listaClient) {
                 // controllo che il nome utente non sia esistente
@@ -120,14 +120,14 @@ public class ClientHandler extends Thread {
         invioMessaggioServer("entrato");
     }
 
-    public void notificaClients(Socket socket) {
+    public void messaggioBC(Socket socket, String messaggio) {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
                 if(!c.nomeUtente.equals(this.nomeUtente))
-                c.invioMessaggioServer(nomeUtente + " si e' unito alla chat!" + '\n');
+                c.invioMessaggioServer(messaggio);
             } catch (IOException e) {
-                messaggioErrore("Errore nell'invio del messaggio dal server");
+                messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
             }
         }
     }
@@ -151,19 +151,29 @@ public class ClientHandler extends Thread {
         output.writeBytes(stringaSerializzata + '\n');
     }
 
-    public Messaggio riceviMessaggioDes(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException {
+    public Messaggio deserializzaMessaggio(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException {
         // deserializzo
         Messaggio stringaDeserializzata = objectMapper.readValue(messaggioRicevuto, Messaggio.class);
         // ritorno il l'istanza
         return stringaDeserializzata;
     }
 
-    public void riceviMessaggio(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException{
-        mexRicevuto = riceviMessaggioDes(messaggioRicevuto);
+    public void riceviMessaggio(String messaggioRicevuto) throws IOException{
+        mexRicevuto = deserializzaMessaggio(messaggioRicevuto);
         //messaggio broadcast
         if(mexRicevuto.getComando().equals("1"))
-
+        {
+            messaggioBC(socket, messaggioRicevuto);
+        }
+        //messaggio diretto ad una sola persona
+        else if (mexRicevuto.getComando().equals("2"))
+        {
+            for (ClientHandler c : ServerStr.listaClient) {
+                if(c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))){
+                    c.inviaMessaggio(mexRicevuto);
+                }
+            }
+        }
     }
-
 }
 // Thread sia un istanza di oggetto che un thread
