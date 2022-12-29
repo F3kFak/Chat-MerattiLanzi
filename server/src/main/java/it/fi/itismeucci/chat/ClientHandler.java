@@ -182,10 +182,12 @@ public class ClientHandler extends Thread {
         //messaggio broadcast
         if(mexRicevuto.getComando().equals("1"))
         {
+            //scrivo sul server la situazione
+            System.out.println(this.nomeUtente + " ha inviato a tutti: " + mexRicevuto.getCorpo());
             for (ClientHandler c : ServerStr.listaClient) {
                 try {
                     if(!c.nomeUtente.equals(this.nomeUtente)){
-                        c.inviaMessaggio(mexRicevuto); 
+                        c.inviaMessaggio(mexRicevuto);
                     }
                 } 
                 catch (IOException e) {
@@ -197,6 +199,7 @@ public class ClientHandler extends Thread {
         //messaggio diretto ad una sola persona
         else if (mexRicevuto.getComando().equals("2"))
         {
+            System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo());
             for (ClientHandler c : ServerStr.listaClient) {
                 if(c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))){
                     c.inviaMessaggio(mexRicevuto);

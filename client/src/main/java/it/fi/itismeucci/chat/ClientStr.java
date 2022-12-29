@@ -90,28 +90,36 @@ public class ClientStr{
 
     public static void threadInviaMessaggio() throws IOException {
         mexInviato.setMittente(nomeClient);
-        menuOpzioni();
-        //seleziona l'opzione del destinatario
-        String opzione = tastiera.readLine();
-        //imposto il destinatario del messaggio ed il tipo di comando
-        switch(opzione){
-            case "1":
-                destinatarioArrayList.add("all");
-                mexInviato.setDestinatario(destinatarioArrayList);
-                mexInviato.setComando("1");
-                break;
-            case "2":
-                //TOFIX
-                String destinatario = tastiera.readLine();
-                destinatarioArrayList.clear();
-                destinatarioArrayList.add(destinatario);
-                mexInviato.setDestinatario(destinatarioArrayList);
-                mexInviato.setComando("2");
-                break;
-            default:
-                System.out.println("Opzione non valida");
-                break;
-        }
+        String opzione;
+        //boolean entrato = false;
+        //do{
+            menuOpzioni();
+            //seleziona l'opzione del destinatario
+            opzione = tastiera.readLine();
+            //imposto il destinatario del messaggio ed il tipo di comando
+            switch(opzione){
+                case "1":
+                    //entrato = true;
+                    destinatarioArrayList.add("all");
+                    mexInviato.setDestinatario(destinatarioArrayList);
+                    mexInviato.setComando("1");
+                    break;
+                case "2":
+                    //TOFIX
+                    //entrato = true;
+                    System.out.print("Inserisci il destinatario: ");
+                    String destinatario = tastiera.readLine();
+                    destinatarioArrayList.clear();
+                    destinatarioArrayList.add(destinatario);
+                    mexInviato.setDestinatario(destinatarioArrayList);
+                    mexInviato.setComando("2");
+                    break;
+                default:
+                    System.out.println("Opzione non valida");
+                    //entrato = false;
+                    break;
+            }
+        //}while(entrato);
         System.out.print("Inserisci il messaggio: ");
         //scrivo il corpo del messaggio
         String corpo = tastiera.readLine();
@@ -122,6 +130,7 @@ public class ClientStr{
 
     public static void threadRiceviMessaggio() throws IOException {
         Messaggio mexRicevuto = riceviMessaggio();
+        System.out.println('\n');
         //messaggio dal server
         if(mexRicevuto.getMittente().equals("Server") && mexRicevuto.getComando().equals("0")){
             //messaggio di sistema
@@ -135,7 +144,7 @@ public class ClientStr{
         }
         // messaggio privato da un altro client
         else if(mexRicevuto.getComando().equals("2")){
-            System.out.println(mexRicevuto.getMittente() + ": " + mexRicevuto.getCorpo());
+            System.out.println(mexRicevuto.getMittente() + " ti ha scritto: " + mexRicevuto.getCorpo());
             System.out.println("");
         }
         menuOpzioni();
@@ -144,6 +153,6 @@ public class ClientStr{
     public static void menuOpzioni() throws IOException{
         System.out.println("--------------Menu---------------");
         System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
-        System.out.println("Seleziona l'opzione per il destinatario: ");
+        System.out.print("Seleziona l'opzione per il destinatario: ");
     }
 }
