@@ -105,7 +105,6 @@ public class ClientStr{
                     mexInviato.setComando("1");
                     break;
                 case "2":
-                    //TOFIX
                     entrato = true;
                     System.out.print("Inserisci il destinatario: ");
                     String destinatario = tastiera.readLine();
@@ -146,6 +145,9 @@ public class ClientStr{
         else if(mexRicevuto.getComando().equals("2")){
             System.out.println(mexRicevuto.getMittente() + " ti ha scritto: " + mexRicevuto.getCorpo());
             System.out.println("");
+        }
+        else if(mexRicevuto.getComando().equals("-1") && mexRicevuto.getCorpo().equals("menu")){
+            System.out.println(mexRicevuto.getDestinatario());
         }
         //riscrivo il menu perche nel caso ricevo un messaggio so cosa devo scrivere
         menuOpzioni();

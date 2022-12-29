@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class ServerStr {
     
+    //array di tutte le connessioni
     public static ArrayList<ClientHandler>listaClient = new ArrayList<>();
-    
 
     public void avvia() throws IOException {
         System.out.println("Server partito in esecuzione ... ");

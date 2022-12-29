@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,6 +28,8 @@ public class ClientHandler extends Thread {
     private Messaggio mexRicevuto;
     private Messaggio utente;
 
+    private static ArrayList<String> allClientsName; //arraylist per sapere i nomi dei client connessi
+
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,6 +37,7 @@ public class ClientHandler extends Thread {
         this.objectMapper = new ObjectMapper();
         this.mexInviato = new Messaggio();
         this.utente = new Messaggio();
+        ClientHandler.allClientsName = new ArrayList<String>();
     }
 
     public String getNomeUtente() {
@@ -126,38 +130,30 @@ public class ClientHandler extends Thread {
                 }
             }
         } while (exists);
-        // il client non è un doppione
-        // allora lo aggiungo il client alla lista
+        // il client non è un doppioneallora lo aggiungo il client alla lista
         ServerStr.listaClient.add(this);
         // imposto il nome del client
         nomeUtente = utente.getMittente();
+        //aggiungo il nome all'arraylist
+        ClientHandler.allClientsName.add(nomeUtente);
         //conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
-    }
-
-    public void notificaClients(Socket socket, String messaggio) throws IOException {
-        // il client è entrato a far parte della chat e lo notifica
-        for (ClientHandler c : ServerStr.listaClient) {
-            try {
-                if(!c.nomeUtente.equals(this.nomeUtente)){
-                    c.invioMessaggioServer(messaggio);  
-                }
-            } catch (IOException e) {
-                messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
-            }
-        }
+        //invio la lista degli utenti connessi
+        invioUtentiConnessi();
     }
 
     public void invioMessaggioServer(String mex) throws IOException{
         mexInviato.setMittente("Server");
-        mexInviato.setCorpo(mex);
         mexInviato.setComando("0");
+        mexInviato.setDestinatario(null);
+        mexInviato.setCorpo(mex);
         inviaMessaggio(mexInviato);
     }
 
     public void messaggioErrore(String err) throws IOException {
         mexInviato.setMittente("Server");
         mexInviato.setComando("0");
+        mexInviato.setDestinatario(null);
         mexInviato.setCorpo("Errore nel server. \n" + err);
         inviaMessaggio(mexInviato);
         System.out.println(err);
@@ -175,6 +171,34 @@ public class ClientHandler extends Thread {
         Messaggio stringaDeserializzata = objectMapper.readValue(messaggioRicevuto, Messaggio.class);
         // ritorno il l'istanza
         return stringaDeserializzata;
+    }
+
+    public void notificaClients(Socket socket, String messaggio) throws IOException {
+        // il client è entrato a far parte della chat e lo notifica
+        for (ClientHandler c : ServerStr.listaClient) {
+            try {
+                if(!c.nomeUtente.equals(this.nomeUtente)){
+                    c.invioMessaggioServer(messaggio);  
+                }
+            } catch (IOException e) {
+                messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
+            }
+        }
+    }
+
+    public void invioUtentiConnessi() throws IOException{
+        mexInviato.setMittente("Server");
+        mexInviato.setDestinatario(allClientsName);
+        mexInviato.corpo("menu");
+        mexInviato.comando("-1");
+        for (ClientHandler c : ServerStr.listaClient) {
+            try {
+                c.inviaMessaggio(mexInviato);
+            } catch (IOException e) {
+                System.out.println(e);
+                messaggioErrore("Errore nell'invio dell'array di utenti connessi");
+            }
+        }
     }
 
     public void riceviMessaggio(String messaggioRicevuto) throws IOException{
