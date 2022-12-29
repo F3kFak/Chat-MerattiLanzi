@@ -51,7 +51,7 @@ public class ClientHandler extends Thread {
         }
         //si notifica del nuovo client in chat
         try{
-            messaggioBC(socket, nomeUtente + " si e' unito alla chat!");
+            notificaClients(socket, nomeUtente + " si e' unito alla chat!");
         }
         catch(Exception e){
             System.out.println(e);
@@ -120,12 +120,13 @@ public class ClientHandler extends Thread {
         invioMessaggioServer("entrato");
     }
 
-    public void messaggioBC(Socket socket, String messaggio) {
+    public void notificaClients(Socket socket, String messaggio) throws JsonMappingException, JsonProcessingException {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
-                if(!c.nomeUtente.equals(this.nomeUtente))
-                c.invioMessaggioServer(messaggio);
+                if(!c.nomeUtente.equals(this.nomeUtente)){
+                    c.invioMessaggioServer(messaggio);  
+                }
             } catch (IOException e) {
                 messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
             }
@@ -135,6 +136,7 @@ public class ClientHandler extends Thread {
     public void invioMessaggioServer(String mex) throws IOException{
         mexInviato.setMittente("Server");
         mexInviato.setCorpo(mex);
+        mexInviato.setComando("0");
         inviaMessaggio(mexInviato);
     }
 
@@ -164,7 +166,7 @@ public class ClientHandler extends Thread {
         //messaggio broadcast
         if(mexRicevuto.getComando().equals("1"))
         {
-            messaggioBC(socket, messaggioRicevuto);
+            notificaClients(socket, messaggioRicevuto);
         }
         //messaggio diretto ad una sola persona
         else if (mexRicevuto.getComando().equals("2"))
