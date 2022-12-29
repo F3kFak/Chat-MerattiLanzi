@@ -91,22 +91,22 @@ public class ClientStr{
     public static void threadInviaMessaggio() throws IOException {
         mexInviato.setMittente(nomeClient);
         String opzione;
-        //boolean entrato = false;
-        //do{
+        boolean entrato = false;
+        do{
             menuOpzioni();
             //seleziona l'opzione del destinatario
             opzione = tastiera.readLine();
             //imposto il destinatario del messaggio ed il tipo di comando
             switch(opzione){
                 case "1":
-                    //entrato = true;
+                    entrato = true;
                     destinatarioArrayList.add("all");
                     mexInviato.setDestinatario(destinatarioArrayList);
                     mexInviato.setComando("1");
                     break;
                 case "2":
                     //TOFIX
-                    //entrato = true;
+                    entrato = true;
                     System.out.print("Inserisci il destinatario: ");
                     String destinatario = tastiera.readLine();
                     destinatarioArrayList.clear();
@@ -116,10 +116,10 @@ public class ClientStr{
                     break;
                 default:
                     System.out.println("Opzione non valida");
-                    //entrato = false;
+                    entrato = false;
                     break;
             }
-        //}while(entrato);
+        }while(!entrato);
         System.out.print("Inserisci il messaggio: ");
         //scrivo il corpo del messaggio
         String corpo = tastiera.readLine();
@@ -147,11 +147,12 @@ public class ClientStr{
             System.out.println(mexRicevuto.getMittente() + " ti ha scritto: " + mexRicevuto.getCorpo());
             System.out.println("");
         }
+        //riscrivo il menu perche nel caso ricevo un messaggio so cosa devo scrivere
         menuOpzioni();
     }
 
     public static void menuOpzioni() throws IOException{
-        System.out.println("--------------Menu---------------");
+        System.out.println("---------------Menu---------------");
         System.out.println("1--> A tutti" + '\n' + "2--> destinatario" + '\n');
         System.out.print("Seleziona l'opzione per il destinatario: ");
     }
