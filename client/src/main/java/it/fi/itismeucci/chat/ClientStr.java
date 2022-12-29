@@ -121,21 +121,21 @@ public class ClientStr{
     }
 
     public static void threadRiceviMessaggio() throws IOException {
-        Messaggio stringaDeserializzata = riceviMessaggio();
+        Messaggio mexRicevuto = riceviMessaggio();
         //messaggio dal server
-        if(stringaDeserializzata.getMittente().equals("Server") && stringaDeserializzata.getComando().equals("0")){
+        if(mexRicevuto.getMittente().equals("Server") && mexRicevuto.getComando().equals("0")){
             //messaggio di sistema
-            System.out.println(stringaDeserializzata.getCorpo());
+            System.out.println(mexRicevuto.getCorpo());
             System.out.println("");
         }
         // messaggio in broadcast da un altro client
-        else if(stringaDeserializzata.getComando().equals("1")){
-            System.out.println(stringaDeserializzata.getMittente() + " ha scritto a tutti: " + stringaDeserializzata.getCorpo());
+        else if(mexRicevuto.getComando().equals("1")){
+            System.out.println(mexRicevuto.getMittente() + " ha scritto a tutti: " + mexRicevuto.getCorpo());
             System.out.println("");
         }
         // messaggio privato da un altro client
-        else if(stringaDeserializzata.getComando().equals("2")){
-            System.out.println(stringaDeserializzata.getMittente() + ": " + stringaDeserializzata.getCorpo());
+        else if(mexRicevuto.getComando().equals("2")){
+            System.out.println(mexRicevuto.getMittente() + ": " + mexRicevuto.getCorpo());
             System.out.println("");
         }
         menuOpzioni();
