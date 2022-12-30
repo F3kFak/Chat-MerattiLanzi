@@ -27,8 +27,7 @@ public class ClientHandler extends Thread {
     private Messaggio mexInviato;
     private Messaggio mexRicevuto;
     private Messaggio utente;
-
-    private static ArrayList<String> allClientsName; //arraylist per sapere i nomi dei client connessi
+    private String listaClientConnessi = "";
 
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
@@ -37,7 +36,6 @@ public class ClientHandler extends Thread {
         this.objectMapper = new ObjectMapper();
         this.mexInviato = new Messaggio();
         this.utente = new Messaggio();
-        ClientHandler.allClientsName = new ArrayList<String>();
     }
 
     public String getNomeUtente() {
@@ -135,7 +133,7 @@ public class ClientHandler extends Thread {
         // imposto il nome del client
         nomeUtente = utente.getMittente();
         //aggiungo il nome all'arraylist
-        ClientHandler.allClientsName.add(nomeUtente);
+        ServerStr.allClientsName.add(nomeUtente);
         //conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
         //invio la lista degli utenti connessi
@@ -188,8 +186,11 @@ public class ClientHandler extends Thread {
 
     public void invioUtentiConnessi() throws IOException{
         mexInviato.setMittente("Server");
-        mexInviato.setDestinatario(allClientsName);
-        mexInviato.corpo("menu");
+        for (String i : ServerStr.allClientsName) {
+            listaClientConnessi = listaClientConnessi + "- " + i + "\n";
+        }
+        mexInviato.setDestinatario(ServerStr.allClientsName);
+        mexInviato.corpo(listaClientConnessi);
         mexInviato.comando("-1");
         for (ClientHandler c : ServerStr.listaClient) {
             try {
