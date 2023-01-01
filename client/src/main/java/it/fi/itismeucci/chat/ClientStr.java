@@ -93,7 +93,7 @@ public class ClientStr {
         String opzione;
         boolean entrato = false;
         do {
-            menuOpzioni();
+            //menuOpzioni();
             // seleziona l'opzione del destinatario
             opzione = tastiera.readLine();
             // imposto il destinatario del messaggio ed il tipo di comando
@@ -111,6 +111,10 @@ public class ClientStr {
                     //scrivo l'opzione
                     opzioneDestinatario= tastiera.readLine();
                     switch(opzioneDestinatario){
+                        case "0":
+                            entrato = false;
+                            menuOpzioni();
+                            break;
                         // scrivo a tutti
                         case "1":
                             destinatarioArrayList.add("all");
@@ -125,10 +129,8 @@ public class ClientStr {
                             mexInviato.setDestinatario(destinatarioArrayList);
                             mexInviato.setComando("2");
                             break;
-                        case "0":
-                            entrato = false;
-                            break;
                         default:
+                            entrato = false;
                             System.out.println("Opzione non esistente nella scelta del destinatario");
                             break;
                     }
@@ -155,12 +157,13 @@ public class ClientStr {
                 default:
                     System.out.println("Opzione non valida");
                     entrato = false;
+                    menuOpzioni();
                     break;
             }
         } while (!entrato);
         // invio il messaggio al server
         inviaMessaggio(mexInviato);
-        //pulisco l'arraylist
+        //pulisco l'arraylist di destinatari
         destinatarioArrayList.clear();
     }
 
