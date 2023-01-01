@@ -98,20 +98,59 @@ public class ClientStr {
             opzione = tastiera.readLine();
             // imposto il destinatario del messaggio ed il tipo di comando
             switch (opzione) {
+                //chiudo la connessione
+                //TODO
+                case "0":
+                    break;
                 case "1":
+                //scrivo un messaggio con 2 opzioni di destinatario
                     entrato = true;
-                    destinatarioArrayList.add("all");
-                    mexInviato.setDestinatario(destinatarioArrayList);
-                    mexInviato.setComando("1");
+                    //scrivo il menu
+                    menuDestinatari();
+                    String opzioneDestinatario;
+                    //scrivo l'opzione
+                    opzioneDestinatario= tastiera.readLine();
+                    switch(opzioneDestinatario){
+                        // scrivo a tutti
+                        case "1":
+                            destinatarioArrayList.add("all");
+                            mexInviato.setDestinatario(destinatarioArrayList);
+                            mexInviato.setComando("1");
+                            break;
+                        // scrivo ad una sola persona
+                        case "2":
+                            System.out.print("Inserisci il destinatario: ");
+                            String destinatario = tastiera.readLine();
+                            destinatarioArrayList.add(destinatario);
+                            mexInviato.setDestinatario(destinatarioArrayList);
+                            mexInviato.setComando("2");
+                            break;
+                        case "0":
+                            entrato = false;
+                            break;
+                        default:
+                            System.out.println("Opzione non esistente nella scelta del destinatario");
+                            break;
+                    }
+                    if(entrato){
+                        //invio il messaggio da inviare
+                        System.out.print("Inserisci il messaggio: ");
+                        // scrivo il corpo del messaggio
+                        String corpo = tastiera.readLine();
+                        mexInviato.setCorpo(corpo);
+                        System.out.println("");
+                    }
                     break;
                 case "2":
+                // richiedo la lista di utenti connessi
                     entrato = true;
-                    System.out.print("Inserisci il destinatario: ");
-                    String destinatario = tastiera.readLine();
-                    destinatarioArrayList.clear();
-                    destinatarioArrayList.add(destinatario);
+                    destinatarioArrayList.add("Server");
                     mexInviato.setDestinatario(destinatarioArrayList);
-                    mexInviato.setComando("2");
+                    mexInviato.setComando("-1");
+                    break;
+                case "3":
+                // rispondi all'ultima persona che ti ha scritto
+                //TODO
                     break;
                 default:
                     System.out.println("Opzione non valida");
@@ -119,50 +158,58 @@ public class ClientStr {
                     break;
             }
         } while (!entrato);
-        System.out.print("Inserisci il messaggio: ");
-        // scrivo il corpo del messaggio
-        String corpo = tastiera.readLine();
-        mexInviato.setCorpo(corpo);
-        System.out.println("");
         // invio il messaggio al server
         inviaMessaggio(mexInviato);
+        //pulisco l'arraylist
+        destinatarioArrayList.clear();
     }
 
     public static void threadRiceviMessaggio() throws IOException {
         Messaggio mexRicevuto = riceviMessaggio();
-        System.out.println('\n');
+        // riscrivo il menu perche nel caso ricevo un messaggio so cosa devo scrivere
         // messaggio dal server
+        System.out.println("");
         if (mexRicevuto.getMittente().equals("Server") && mexRicevuto.getComando().equals("0")) {
             // messaggio di sistema
             System.out.println(mexRicevuto.getCorpo());
-            System.out.println("");
         }
         // messaggio in broadcast da un altro client
         else if (mexRicevuto.getComando().equals("1")) {
             System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente() + " ha scritto a tutti: " + mexRicevuto.getCorpo());
-            System.out.println("");
         }
         // messaggio privato da un altro client
         else if (mexRicevuto.getComando().equals("2")) {
             System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente() + " ti ha scritto: " + mexRicevuto.getCorpo());
-            System.out.println("");
-        } 
+        }
+        //lista degli utenti connessi
         else if (mexRicevuto.getComando().equals("-1")) {
             System.out.println("Lista dei client connessi: ");
             System.out.println(mexRicevuto.getCorpo());
         }
-        // && mexRicevuto.getCorpo().equals("menu")
-        // riscrivo il menu perche nel caso ricevo un messaggio so cosa devo scrivere
         menuOpzioni();
     }
 
-    public static void menuOpzioni() throws IOException {
-        System.out.println(Colori.ANSI_RED + "---------------Menu---------------" + Colori.ANSI_RESET);
-        System.out.println(Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> A tutti                  "
+    public static void menuDestinatari() throws IOException {
+        System.out.println("");
+        System.out.println(Colori.ANSI_RED + "----------Menu-Messaggio----------" + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 0 --> Esci                     "
                 + Colori.ANSI_RED + "|" + Colori.ANSI_RESET +'\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Destinatario             " + Colori.ANSI_RED + "|"
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere a tutti         "
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET +'\n'
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Scrivere ad una persona  " + Colori.ANSI_RED + "|"
                 + Colori.ANSI_RESET);
         System.out.println(Colori.ANSI_RED + "----------------------------------" + Colori.ANSI_RESET);
         System.out.print("Seleziona l'opzione per il destinatario: ");
+    }
+
+    public static void menuOpzioni(){
+        System.out.println("");
+        System.out.println(Colori.ANSI_RED + "---------------------Menu---------------------" + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere un messaggio                "
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET +'\n'
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Richiedo la lista di utenti connessi " + Colori.ANSI_RED + "|"
+                + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED + "----------------------------------------------" + Colori.ANSI_RESET);
+        System.out.print("Seleziona un'opzione: ");
     }
 }

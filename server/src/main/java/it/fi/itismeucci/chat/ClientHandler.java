@@ -27,7 +27,7 @@ public class ClientHandler extends Thread {
     private Messaggio mexInviato;
     private Messaggio mexRicevuto;
     private Messaggio utente;
-    private String listaClientConnessi = "";
+    private static String listaClientConnessi = "";
 
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
@@ -136,8 +136,11 @@ public class ClientHandler extends Thread {
         ServerStr.allClientsName.add(nomeUtente);
         //conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
-        //invio la lista degli utenti connessi
-        invioUtentiConnessi();
+        // sovrascrivo la lista di utenti connessi
+        listaClientConnessi = listaClientConnessi + "- " + nomeUtente + "\n";
+        if(ServerStr.listaClient.size() == 1){
+            invioMessaggioServer("Nessun altro partecipante connesso");
+        }
     }
 
     public void invioMessaggioServer(String mex) throws IOException{
@@ -176,28 +179,10 @@ public class ClientHandler extends Thread {
         for (ClientHandler c : ServerStr.listaClient) {
             try {
                 if(!c.nomeUtente.equals(this.nomeUtente)){
-                    c.invioMessaggioServer(messaggio);  
+                    c.invioMessaggioServer(messaggio);
                 }
             } catch (IOException e) {
                 messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
-            }
-        }
-    }
-
-    public void invioUtentiConnessi() throws IOException{
-        mexInviato.setMittente("Server");
-        for (String i : ServerStr.allClientsName) {
-            listaClientConnessi = listaClientConnessi + "- " + i + "\n";
-        }
-        mexInviato.setDestinatario(ServerStr.allClientsName);
-        mexInviato.corpo(listaClientConnessi);
-        mexInviato.comando("-1");
-        for (ClientHandler c : ServerStr.listaClient) {
-            try {
-                c.inviaMessaggio(mexInviato);
-            } catch (IOException e) {
-                System.out.println(e);
-                messaggioErrore("Errore nell'invio dell'array di utenti connessi");
             }
         }
     }
@@ -231,6 +216,17 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+        else if (mexRicevuto.getComando().equals("-1")){
+            mexRicevuto.setDestinatario(mexRicevuto.getDestinatario());
+            mexRicevuto.setMittente("Server");
+            mexRicevuto.setCorpo(listaClientConnessi);
+            //invio la lista degli utenti connessi
+            inviaMessaggio(mexRicevuto);
+        }
+        mexRicevuto.setComando(null);
+        mexRicevuto.setCorpo(null);
+        mexRicevuto.setDestinatario(null);
+        mexRicevuto.setMittente(null);
     }
 }
 // Thread sia un istanza di oggetto che un thread
