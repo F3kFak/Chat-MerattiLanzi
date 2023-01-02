@@ -77,7 +77,7 @@ public class ClientHandler extends Thread {
         catch(Exception e){
             System.out.println(e);
             try {
-                messaggioErrore("Nella ricezione del messaggio. \n" + e);
+                messaggioErrore("Durante la ricezione del messaggio. \n" + e);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -209,11 +209,18 @@ public class ClientHandler extends Thread {
         //messaggio diretto ad una sola persona
         else if (mexRicevuto.getComando().equals("2"))
         {
-            System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo());
+            boolean exists = false;
             for (ClientHandler c : ServerStr.listaClient) {
                 if(c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))){
                     c.inviaMessaggio(mexRicevuto);
+                    System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo());
+                    exists = true;
+                    break;
                 }
+            }
+            if(!exists){
+                System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo() + ". Ma l'utente non esiste.");
+                invioMessaggioServer("Utente non esistente");
             }
         }
         else if (mexRicevuto.getComando().equals("-1")){
