@@ -230,6 +230,28 @@ public class ClientHandler extends Thread {
             //invio la lista degli utenti connessi
             inviaMessaggio(mexRicevuto);
         }
+        //rimozione del client
+        else if (mexRicevuto.getComando().equals("4")){
+            for (ClientHandler c : ServerStr.listaClient) {
+                try {
+                    if(!c.nomeUtente.equals(this.nomeUtente)){
+                        mexRicevuto.setCorpo(this.nomeUtente + " e' uscito dalla chat!");
+                        mexRicevuto.setComando("1");
+                        c.inviaMessaggio(mexRicevuto);
+                    }
+                } 
+                catch (IOException e) {
+                    System.out.println(e);
+                    messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
+                }
+            }
+            ServerStr.listaClient.remove(this);
+            ServerStr.allClientsName.remove(nomeUtente);
+            mexRicevuto.setDestinatario(mexRicevuto.getDestinatario());
+            mexRicevuto.setComando("4");
+            mexRicevuto.setMittente("Server");
+            inviaMessaggio(mexRicevuto);
+        }
         mexRicevuto.setComando(null);
         mexRicevuto.setCorpo(null);
         mexRicevuto.setDestinatario(null);

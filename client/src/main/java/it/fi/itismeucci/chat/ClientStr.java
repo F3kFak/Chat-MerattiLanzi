@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientStr {
 
-    public Socket miosocket;
+    public static Socket miosocket;
     public int portaServer = 6969; // porta
     public String nomeServer = "localhost"; // indirizzo server locale
     public static BufferedReader tastiera; // buffer per l'input da tastiera
@@ -161,6 +161,13 @@ public class ClientStr {
                     // rispondi all'ultima persona che ti ha scritto
                     // TODO
                     break;
+                case "4":
+                    //chiusura client
+                    entratoMenuOpzioni = true;
+                    destinatarioArrayList.add("Server");
+                    mexInviato.setDestinatario(destinatarioArrayList);
+                    mexInviato.comando("4");      
+                    break;
                 default:
                     System.out.println("Opzione non valida");
                     entratoMenuOpzioni = false;
@@ -202,6 +209,11 @@ public class ClientStr {
         else if (mexRicevuto.getComando().equals("-1")) {
             System.out.println("Lista dei client connessi: ");
             System.out.println(mexRicevuto.getCorpo());
+        }
+        else if (mexRicevuto.getComando().equals("4")) {
+            System.out.println("chiusura client");
+            miosocket.close();
+            System.exit(1);
         }
         menuOpzioni();
     }
