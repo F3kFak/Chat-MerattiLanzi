@@ -76,6 +76,7 @@ public class ClientHandler extends Thread {
         }
         catch(Exception e){
             System.out.println(e);
+            System.out.println("CICCIOGAMER89");
             try {
                 messaggioErrore("Durante la ricezione del messaggio. \n" + e);
             } catch (IOException e1) {
@@ -136,8 +137,6 @@ public class ClientHandler extends Thread {
         ServerStr.allClientsName.add(nomeUtente);
         //conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
-        // sovrascrivo la lista di utenti connessi
-        //listaClientConnessi();
     }
 
     public void invioMessaggioServer(String mex) throws IOException{
@@ -268,3 +267,18 @@ public class ClientHandler extends Thread {
     }
 }
 // Thread sia un istanza di oggetto che un thread
+
+/*
+ERRORE con Ctrl + C
+
+java.net.SocketException: Connection reset
+CICCIOGAMER89
+java.net.SocketException: Connection reset by peer
+
+
+ERRORE con chiusura con comando "4"
+
+java.lang.IllegalArgumentException: argument "content" is null
+CICCIOGAMER89
+java.net.SocketException: Connessione interrotta dal software del computer host
+ */ 
