@@ -215,6 +215,9 @@ public class ClientStr {
             miosocket.close();
             System.exit(1);
         }
+        else if (mexRicevuto.getComando().equals("chiusura")) {
+            System.out.println(Colori.ANSI_YELLOW + "-> " + mexRicevuto.getMittente() + " <- " + " si e' Disconnesso." + Colori.ANSI_RESET);
+        }
         menuOpzioni();
     }
 

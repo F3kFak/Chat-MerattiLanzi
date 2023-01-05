@@ -137,10 +137,7 @@ public class ClientHandler extends Thread {
         //conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
         // sovrascrivo la lista di utenti connessi
-        listaClientConnessi = listaClientConnessi + "- " + nomeUtente + "\n";
-        if(ServerStr.listaClient.size() == 1){
-            invioMessaggioServer("Nessun altro partecipante connesso");
-        }
+        //listaClientConnessi();
     }
 
     public void invioMessaggioServer(String mex) throws IOException{
@@ -226,7 +223,7 @@ public class ClientHandler extends Thread {
         else if (mexRicevuto.getComando().equals("-1")){
             mexRicevuto.setDestinatario(mexRicevuto.getDestinatario());
             mexRicevuto.setMittente("Server");
-            mexRicevuto.setCorpo(listaClientConnessi);
+            mexRicevuto.setCorpo(listaClientConnessi());
             //invio la lista degli utenti connessi
             inviaMessaggio(mexRicevuto);
         }
@@ -236,7 +233,7 @@ public class ClientHandler extends Thread {
                 try {
                     if(!c.nomeUtente.equals(this.nomeUtente)){
                         mexRicevuto.setCorpo(this.nomeUtente + " e' uscito dalla chat!");
-                        mexRicevuto.setComando("1");
+                        mexRicevuto.setComando("chiusura");
                         c.inviaMessaggio(mexRicevuto);
                     }
                 } 
@@ -256,6 +253,18 @@ public class ClientHandler extends Thread {
         mexRicevuto.setCorpo(null);
         mexRicevuto.setDestinatario(null);
         mexRicevuto.setMittente(null);
+    }
+
+    public String listaClientConnessi() throws IOException{
+        listaClientConnessi = "";
+        if(ServerStr.listaClient.size() == 1){
+            invioMessaggioServer("Nessun altro partecipante connesso");
+        }
+        for (ClientHandler c : ServerStr.listaClient) {
+        listaClientConnessi = listaClientConnessi + "- " + c.nomeUtente + "\n";
+        }
+        
+        return listaClientConnessi;
     }
 }
 // Thread sia un istanza di oggetto che un thread
