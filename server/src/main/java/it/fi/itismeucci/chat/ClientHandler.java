@@ -200,7 +200,7 @@ public class ClientHandler extends Thread {
             }
         }
         // messaggio diretto ad una sola persona
-        else if (mexRicevuto.getComando().equals("2")) {
+        else if (mexRicevuto.getComando().equals("2") || mexRicevuto.getComando().equals("risposta")) {
             boolean exists = false;
             for (ClientHandler c : ServerStr.listaClient) {
                 if (c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))) {

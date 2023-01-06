@@ -141,7 +141,7 @@ public class ClientStr {
                                     System.out.println("Stai rispondendo a " + ultimoDestinatario);
                                     destinatarioArrayList.add(ultimoDestinatario);
                                     mexInviato.setDestinatario(destinatarioArrayList);
-                                    mexInviato.setComando("2");
+                                    mexInviato.setComando("risposta");
                                 }
                                 break;
                             default:
@@ -229,7 +229,9 @@ public class ClientStr {
         } else if (mexRicevuto.getComando().equals("chiusura")) {
             System.out.println(Colori.ANSI_YELLOW + "-> " + mexRicevuto.getMittente() + " <- " + " si e' Disconnesso."
                     + Colori.ANSI_RESET);
-        }
+        } else if (mexRicevuto.getComando().equals("risposta"))
+            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente()
+            + " ti ha risposto: " + mexRicevuto.getCorpo());
         menuOpzioni();
     }
 
