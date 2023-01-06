@@ -56,11 +56,10 @@ public class ClientHandler extends Thread {
                 e1.printStackTrace();
             }
         }
-        //si notifica del nuovo client in chat
-        try{
+        // si notifica del nuovo client in chat
+        try {
             notificaClients(socket, nomeUtente + " si e' unito alla chat!");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             try {
                 messaggioErrore("Errore nella notificazione del nuovo client. \n" + e);
@@ -69,12 +68,11 @@ public class ClientHandler extends Thread {
                 e1.printStackTrace();
             }
         }
-        //rivevi messaggi
-        try{
-            for(;;)
-            riceviMessaggio(input.readLine());
-        }
-        catch(Exception e){
+        // rivevi messaggi
+        try {
+            for (;;)
+                riceviMessaggio(input.readLine());
+        } catch (Exception e) {
             System.out.println(e);
             System.out.println("CICCIOGAMER89");
             try {
@@ -85,7 +83,7 @@ public class ClientHandler extends Thread {
             }
         }
         /*
-         *  
+         * 
          * // chat
          * 
          * ricevimessaggio
@@ -133,13 +131,13 @@ public class ClientHandler extends Thread {
         ServerStr.listaClient.add(this);
         // imposto il nome del client
         nomeUtente = utente.getMittente();
-        //aggiungo il nome all'arraylist
+        // aggiungo il nome all'arraylist
         ServerStr.allClientsName.add(nomeUtente);
-        //conferma da parte del server che il client si è connesso alla chat
+        // conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
     }
 
-    public void invioMessaggioServer(String mex) throws IOException{
+    public void invioMessaggioServer(String mex) throws IOException {
         mexInviato.setMittente("Server");
         mexInviato.setComando("0");
         mexInviato.setDestinatario(null);
@@ -163,7 +161,8 @@ public class ClientHandler extends Thread {
         output.writeBytes(stringaSerializzata + '\n');
     }
 
-    public Messaggio deserializzaMessaggio(String messaggioRicevuto) throws JsonMappingException, JsonProcessingException {
+    public Messaggio deserializzaMessaggio(String messaggioRicevuto)
+            throws JsonMappingException, JsonProcessingException {
         // deserializzo
         Messaggio stringaDeserializzata = objectMapper.readValue(messaggioRicevuto, Messaggio.class);
         // ritorno il l'istanza
@@ -174,7 +173,7 @@ public class ClientHandler extends Thread {
         // il client è entrato a far parte della chat e lo notifica
         for (ClientHandler c : ServerStr.listaClient) {
             try {
-                if(!c.nomeUtente.equals(this.nomeUtente)){
+                if (!c.nomeUtente.equals(this.nomeUtente)) {
                     c.invioMessaggioServer(messaggio);
                 }
             } catch (IOException e) {
@@ -183,60 +182,57 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void riceviMessaggio(String messaggioRicevuto) throws IOException{
+    public void riceviMessaggio(String messaggioRicevuto) throws IOException {
         mexRicevuto = deserializzaMessaggio(messaggioRicevuto);
-        //messaggio broadcast
-        if(mexRicevuto.getComando().equals("1"))
-        {
-            //scrivo sul server la situazione
+        // messaggio broadcast
+        if (mexRicevuto.getComando().equals("1")) {
+            // scrivo sul server la situazione
             System.out.println(this.nomeUtente + " ha inviato a tutti: " + mexRicevuto.getCorpo());
             for (ClientHandler c : ServerStr.listaClient) {
                 try {
-                    if(!c.nomeUtente.equals(this.nomeUtente)){
+                    if (!c.nomeUtente.equals(this.nomeUtente)) {
                         c.inviaMessaggio(mexRicevuto);
                     }
-                } 
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.out.println(e);
                     messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
                 }
             }
         }
-        //messaggio diretto ad una sola persona
-        else if (mexRicevuto.getComando().equals("2"))
-        {
+        // messaggio diretto ad una sola persona
+        else if (mexRicevuto.getComando().equals("2")) {
             boolean exists = false;
             for (ClientHandler c : ServerStr.listaClient) {
-                if(c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))){
+                if (c.nomeUtente.equals(mexRicevuto.getDestinatario().get(0))) {
                     c.inviaMessaggio(mexRicevuto);
-                    System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo());
+                    System.out.println(this.nomeUtente + " ha inviato a " + mexRicevuto.getDestinatario() + ": "
+                            + mexRicevuto.getCorpo());
                     exists = true;
                     break;
                 }
             }
-            if(!exists){
-                System.out.println(this.nomeUtente + " ha inviato a "+ mexRicevuto.getDestinatario() + ": " + mexRicevuto.getCorpo() + ". Ma l'utente non esiste.");
+            if (!exists) {
+                System.out.println(this.nomeUtente + " ha inviato a " + mexRicevuto.getDestinatario() + ": "
+                        + mexRicevuto.getCorpo() + ". Ma l'utente non esiste.");
                 invioMessaggioServer("Utente non esistente");
             }
-        }
-        else if (mexRicevuto.getComando().equals("-1")){
+        } else if (mexRicevuto.getComando().equals("-1")) {
             mexRicevuto.setDestinatario(mexRicevuto.getDestinatario());
             mexRicevuto.setMittente("Server");
             mexRicevuto.setCorpo(listaClientConnessi());
-            //invio la lista degli utenti connessi
+            // invio la lista degli utenti connessi
             inviaMessaggio(mexRicevuto);
         }
-        //rimozione del client
-        else if (mexRicevuto.getComando().equals("4")){
+        // rimozione del client
+        else if (mexRicevuto.getComando().equals("4")) {
             for (ClientHandler c : ServerStr.listaClient) {
                 try {
-                    if(!c.nomeUtente.equals(this.nomeUtente)){
+                    if (!c.nomeUtente.equals(this.nomeUtente)) {
                         mexRicevuto.setCorpo(this.nomeUtente + " e' uscito dalla chat!");
                         mexRicevuto.setComando("chiusura");
                         c.inviaMessaggio(mexRicevuto);
                     }
-                } 
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.out.println(e);
                     messaggioErrore("Errore nell'invio del messaggio broadcast dal server");
                 }
@@ -254,31 +250,32 @@ public class ClientHandler extends Thread {
         mexRicevuto.setMittente(null);
     }
 
-    public String listaClientConnessi() throws IOException{
+    public String listaClientConnessi() throws IOException {
         listaClientConnessi = "";
-        if(ServerStr.listaClient.size() == 1){
+        if (ServerStr.listaClient.size() == 1) {
             invioMessaggioServer("Nessun altro partecipante connesso");
         }
         for (ClientHandler c : ServerStr.listaClient) {
-        listaClientConnessi = listaClientConnessi + "- " + c.nomeUtente + "\n";
+            listaClientConnessi = listaClientConnessi + "- " + c.nomeUtente + "\n";
         }
-        
+
         return listaClientConnessi;
     }
 }
 // Thread sia un istanza di oggetto che un thread
 
 /*
-ERRORE con Ctrl + C
-
-java.net.SocketException: Connection reset
-CICCIOGAMER89
-java.net.SocketException: Connection reset by peer
-
-
-ERRORE con chiusura con comando "4"
-
-java.lang.IllegalArgumentException: argument "content" is null
-CICCIOGAMER89
-java.net.SocketException: Connessione interrotta dal software del computer host
- */ 
+ * ERRORE con Ctrl + C
+ * 
+ * java.net.SocketException: Connection reset
+ * CICCIOGAMER89
+ * java.net.SocketException: Connection reset by peer
+ * 
+ * 
+ * ERRORE con chiusura con comando "4"
+ * 
+ * java.lang.IllegalArgumentException: argument "content" is null
+ * CICCIOGAMER89
+ * java.net.SocketException: Connessione interrotta dal software del computer
+ * host
+ */
