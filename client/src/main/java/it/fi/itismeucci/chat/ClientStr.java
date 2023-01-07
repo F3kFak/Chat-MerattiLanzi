@@ -64,6 +64,7 @@ public class ClientStr {
                 }
             }
         });
+        
         do {
             //controllo se il nome non è valido
             do{

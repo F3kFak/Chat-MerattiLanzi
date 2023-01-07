@@ -66,8 +66,9 @@ public class ClientHandler extends Thread {
     }
 
     public void registrazione(Socket socket) throws IOException {
-        boolean exists = false;
+        boolean exists;
         do {
+            exists = false;
             // ricevo il messaggio e lo deserializzo
             utente = deserializzaMessaggio(input.readLine());
             System.out.println("Utente connesso come: " + utente.getMittente());
