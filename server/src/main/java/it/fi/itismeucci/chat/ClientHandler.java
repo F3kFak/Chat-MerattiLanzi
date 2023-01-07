@@ -49,24 +49,12 @@ public class ClientHandler extends Thread {
             registrazione(socket);
         } catch (IOException e) {
             System.out.println(e);
-            try {
-                messaggioErrore("Errore di registrazione. \n" + e);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
         }
         // si notifica del nuovo client in chat
         try {
             notificaClients(socket, nomeUtente + " si e' unito alla chat!");
         } catch (Exception e) {
             System.out.println(e);
-            try {
-                messaggioErrore("Errore nella notificazione del nuovo client. \n" + e);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
         }
         // rivevi messaggi
         try {
@@ -74,13 +62,6 @@ public class ClientHandler extends Thread {
                 riceviMessaggio(input.readLine());
         } catch (Exception e) {
             System.out.println(e);
-            System.out.println("CICCIOGAMER89");
-            try {
-                messaggioErrore("Durante la ricezione del messaggio. \n" + e);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
         }
     }
 
@@ -96,7 +77,7 @@ public class ClientHandler extends Thread {
                     // var impostata su true per ripetere il ciclo
                     exists = true;
                     // invio messaggio di errore
-                    invioMessaggioServer("Connessione rifiutata, client già esistente");
+                    invioMessaggioServer("Connessione rifiutata, client gia' esistente");
                     break;
                 }
             }
@@ -217,6 +198,7 @@ public class ClientHandler extends Thread {
             mexRicevuto.setDestinatario(mexRicevuto.getDestinatario());
             mexRicevuto.setComando("4");
             mexRicevuto.setMittente("Server");
+            System.out.println(nomeUtente + " si è disconnesso");
             inviaMessaggio(mexRicevuto);
         }
         mexRicevuto.setComando(null);
@@ -233,20 +215,3 @@ public class ClientHandler extends Thread {
         return listaClientConnessi;
     }
 }
-// Thread sia un istanza di oggetto che un thread
-
-/*
- * ERRORE con Ctrl + C
- * 
- * java.net.SocketException: Connection reset
- * CICCIOGAMER89
- * java.net.SocketException: Connection reset by peer
- * 
- * 
- * ERRORE con chiusura con comando "4"
- * 
- * java.lang.IllegalArgumentException: argument "content" is null
- * CICCIOGAMER89
- * java.net.SocketException: Connessione interrotta dal software del computer
- * host
- */

@@ -55,33 +55,37 @@ public class ClientStr {
             @Override
             public void run() {
                 // chiusura client
-                destinatarioArrayList.add("Server");
-                mexInviato.setDestinatario(destinatarioArrayList);
-                mexInviato.comando("4");
+                chiusuraClient();
                 // invio il messaggio al server
                 try {
                     inviaMessaggio(mexInviato);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    //
                 }
-                System.out.println("\nchiusura client");
-                
             }
         });
         do {
-            System.out.print("Inserisci nome: ");
-            nomeClient = tastiera.readLine();
-            // serializzare in una classe
+            //controllo se il nome non è valido
+            do{
+                System.out.print("Inserisci il nome utente: ");
+                nomeClient = tastiera.readLine();
+                if(nomeClient.isEmpty() || nomeClient.isBlank() || nomeClient.equals("")){
+                    System.out.println("Inserisci un nome valido");
+                }
+            }
+            while(nomeClient.isEmpty() || nomeClient.isBlank() || nomeClient.equals(""));
+            // serializza in una classe il nome
             mexInviato.setMittente(nomeClient);
             inviaMessaggio(mexInviato);
-            // leggi la risposta (deserilizza)
+            // leggi la risposta (deserilizzata)
             mexRicevuto = riceviMessaggio();
             // controllo se sono entrato a far parte della chat
             if (mexRicevuto.getMittente().equals("Server") && mexRicevuto.getCorpo().equals("entrato"))
                 entrato = false;
-            else
-                System.out.println("Nome utente già esistente. Riprova...");
+            else{
+                System.out.println(mexRicevuto.getCorpo());
+                entrato = true;
+            }
         } while (entrato);
         System.out.println("Entrato nella chat");
         menuOpzioni();
@@ -190,9 +194,7 @@ public class ClientStr {
                 case "3":
                     // chiusura client
                     entratoMenuOpzioni = true;
-                    destinatarioArrayList.add("Server");
-                    mexInviato.setDestinatario(destinatarioArrayList);
-                    mexInviato.comando("4");
+                    chiusuraClient();
                     break;
                 default:
                     System.out.println("Opzione non valida");
@@ -249,6 +251,12 @@ public class ClientStr {
         menuOpzioni();
     }
 
+    public static void chiusuraClient(){
+        destinatarioArrayList.add("Server");
+        mexInviato.setDestinatario(destinatarioArrayList);
+        mexInviato.comando("4");
+    }
+
     public static void menuDestinatari() throws IOException {
         System.out.println("");
         System.out.println(Colori.ANSI_RED +                  "------------------Menu-Messaggio----------------" + Colori.ANSI_RESET);
@@ -273,7 +281,7 @@ public class ClientStr {
                 + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
                 + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Richiedo la lista di utenti connessi "
                 + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Chiudi la connessione "
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Chiudi la connessione                "
                 + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
         System.out.println(Colori.ANSI_RED +                 "----------------------------------------------" + Colori.ANSI_RESET);
         System.out.print("Seleziona un'opzione: ");
