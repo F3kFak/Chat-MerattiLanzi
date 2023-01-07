@@ -188,10 +188,6 @@ public class ClientStr {
                     mexInviato.setComando("-1");
                     break;
                 case "3":
-                    // rispondi all'ultima persona che ti ha scritto
-                    // TODO
-                    break;
-                case "4":
                     // chiusura client
                     entratoMenuOpzioni = true;
                     destinatarioArrayList.add("Server");
@@ -271,13 +267,15 @@ public class ClientStr {
 
     public static void menuOpzioni() {
         System.out.println("");
-        System.out.println(Colori.ANSI_RED + "---------------------Menu---------------------" + Colori.ANSI_RESET);
-        System.out.println(Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 0 --> Chiudi la connessione                "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n' + Colori.ANSI_RED + "|" + Colori.ANSI_RESET
-                + " 1 --> Scrivere un messaggio                " + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+        System.out.println(Colori.ANSI_RED +                  "---------------------Menu---------------------" + Colori.ANSI_RESET);
+        System.out.println(
+                  Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere un messaggio                "
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
                 + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Richiedo la lista di utenti connessi "
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Chiudi la connessione "
                 + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
-        System.out.println(Colori.ANSI_RED + "----------------------------------------------" + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED +                 "----------------------------------------------" + Colori.ANSI_RESET);
         System.out.print("Seleziona un'opzione: ");
     }
 
