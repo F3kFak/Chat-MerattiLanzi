@@ -82,32 +82,6 @@ public class ClientHandler extends Thread {
                 e1.printStackTrace();
             }
         }
-        /*
-         * 
-         * // chat
-         * 
-         * ricevimessaggio
-         * 
-         * switch (tipo) {
-         * 
-         * scrivi a tutti
-         * 
-         * per tutti i client ClientHandler.listaClient c
-         * 
-         * 
-         * // si sta utilizzando l'istanza che gestisce i vari clien
-         * // utilizzanod il thread del client che ha inviato il messaggio
-         * c.inviaMessaggio
-         * 
-         * 
-         * -----------------------
-         * 
-         * scrivi a uno
-         * 
-         * per tutti i client ClientHandler.listaClient c
-         * cercando che c.nomeUtente = al destinatario
-         * c.invia messaggio
-         */
     }
 
     public void registrazione(Socket socket) throws IOException {
@@ -135,6 +109,7 @@ public class ClientHandler extends Thread {
         ServerStr.allClientsName.add(nomeUtente);
         // conferma da parte del server che il client si è connesso alla chat
         invioMessaggioServer("entrato");
+        
     }
 
     public void invioMessaggioServer(String mex) throws IOException {
@@ -252,13 +227,9 @@ public class ClientHandler extends Thread {
 
     public String listaClientConnessi() throws IOException {
         listaClientConnessi = "";
-        if (ServerStr.listaClient.size() == 1) {
-            invioMessaggioServer("Nessun altro partecipante connesso");
-        }
         for (ClientHandler c : ServerStr.listaClient) {
             listaClientConnessi = listaClientConnessi + "- " + c.nomeUtente + "\n";
         }
-
         return listaClientConnessi;
     }
 }

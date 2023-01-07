@@ -51,6 +51,24 @@ public class ClientStr {
     public void registra() throws IOException {
         boolean entrato = true;
 
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                // chiusura client
+                destinatarioArrayList.add("Server");
+                mexInviato.setDestinatario(destinatarioArrayList);
+                mexInviato.comando("4");
+                // invio il messaggio al server
+                try {
+                    inviaMessaggio(mexInviato);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                System.out.println("\nchiusura client");
+                
+            }
+        });
         do {
             System.out.print("Inserisci nome: ");
             nomeClient = tastiera.readLine();
