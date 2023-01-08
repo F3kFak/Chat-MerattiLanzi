@@ -221,7 +221,7 @@ public class ClientStr {
         }
         // messaggio in broadcast da un altro client
         else if (mexRicevuto.getComando().equals("1")) {
-            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente()
+            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
                     + " ha scritto a tutti: " + mexRicevuto.getCorpo());
         }
         // messaggio privato da un altro client
@@ -230,8 +230,9 @@ public class ClientStr {
                 System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET
                         + " hai scritto a te stesso: " + mexRicevuto.getCorpo());
             } else {
-                System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente()
+                System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
                         + " ti ha scritto: " + mexRicevuto.getCorpo());
+                // salvo l'ultimo client che mi scritto
                 ultimoDestinatario = mexRicevuto.getMittente();
             }
         }
@@ -239,16 +240,23 @@ public class ClientStr {
         else if (mexRicevuto.getComando().equals("-1")) {
             System.out.println("Lista dei client connessi: ");
             System.out.println(mexRicevuto.getCorpo());
-        } else if (mexRicevuto.getComando().equals("4")) {
+        } 
+        //chiusura client
+        else if (mexRicevuto.getComando().equals("4")) {
             System.out.println("chiusura client");
             miosocket.close();
             System.exit(1);
-        } else if (mexRicevuto.getComando().equals("chiusura")) {
-            System.out.println(Colori.ANSI_YELLOW + "-> " + mexRicevuto.getMittente() + " <- " + " si e' Disconnesso."
-                    + Colori.ANSI_RESET);
-        } else if (mexRicevuto.getComando().equals("risposta"))
-            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + mexRicevuto.getMittente()
+        } 
+        //notifica di chiusura di un client
+        else if (mexRicevuto.getComando().equals("chiusura")) {
+            System.out.println(Colori.ANSI_YELLOW + "Notifica --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET + " si e' Disconnesso.");
+        } 
+        //risposta di un client
+        else if (mexRicevuto.getComando().equals("risposta"))
+            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
             + " ti ha risposto: " + mexRicevuto.getCorpo());
+        // salvo l'ultimo client che mi scritto
+        ultimoDestinatario = mexRicevuto.getMittente();
         menuOpzioni();
     }
 

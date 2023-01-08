@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
         }
         // si notifica del nuovo client in chat
         try {
-            notificaClients(socket, nomeUtente + " si e' unito alla chat!");
+            notificaClients(socket, Colori.ANSI_YELLOW + "Notifica --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + nomeUtente + Colori.ANSI_RESET + " si e' unito alla chat!");
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -128,6 +128,9 @@ public class ClientHandler extends Thread {
 
     public void notificaClients(Socket socket, String messaggio) throws IOException {
         // il client è entrato a far parte della chat e lo notifica
+        if(ServerStr.allClientsName.size() == 1){
+            invioMessaggioServer(Colori.ANSI_YELLOW + "Notifica --> " + Colori.ANSI_RESET + "Sei il solo connesso alla chat");
+        }
         for (ClientHandler c : ServerStr.listaClient) {
             try {
                 if (!c.nomeUtente.equals(this.nomeUtente)) {
@@ -211,7 +214,7 @@ public class ClientHandler extends Thread {
     public String listaClientConnessi() throws IOException {
         listaClientConnessi = "";
         for (ClientHandler c : ServerStr.listaClient) {
-            listaClientConnessi = listaClientConnessi + "- " + c.nomeUtente + "\n";
+            listaClientConnessi = listaClientConnessi + "-> " + c.nomeUtente + "\n";
         }
         return listaClientConnessi;
     }
