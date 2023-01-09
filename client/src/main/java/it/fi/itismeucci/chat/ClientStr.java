@@ -64,17 +64,19 @@ public class ClientStr {
                 }
             }
         });
-        
+
         do {
-            //controllo se il nome non è valido
-            do{
+            // controllo se il nome non è valido
+            do {
                 System.out.print("Inserisci il nome utente: ");
                 nomeClient = tastiera.readLine();
-                if(nomeClient.isEmpty() || nomeClient.isBlank() || nomeClient.equals("")){
+                if (nomeClient.isEmpty() ||
+                        nomeClient.isBlank() ||
+                        nomeClient.equals("") ||
+                        nomeClient.charAt(0) == ' ') {
                     System.out.println("Inserisci un nome valido");
                 }
-            }
-            while(nomeClient.isEmpty() || nomeClient.isBlank() || nomeClient.equals(""));
+            } while (nomeClient.isEmpty() || nomeClient.isBlank() || nomeClient.equals("") || nomeClient.charAt(0) == ' ');
             // serializza in una classe il nome
             mexInviato.setMittente(nomeClient);
             inviaMessaggio(mexInviato);
@@ -83,7 +85,7 @@ public class ClientStr {
             // controllo se sono entrato a far parte della chat
             if (mexRicevuto.getMittente().equals("Server") && mexRicevuto.getCorpo().equals("entrato"))
                 entrato = false;
-            else{
+            else {
                 System.out.println(mexRicevuto.getCorpo());
                 entrato = true;
             }
@@ -221,7 +223,8 @@ public class ClientStr {
         }
         // messaggio in broadcast da un altro client
         else if (mexRicevuto.getComando().equals("1")) {
-            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
+            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN
+                    + mexRicevuto.getMittente() + Colori.ANSI_RESET
                     + " ha scritto a tutti: " + mexRicevuto.getCorpo());
         }
         // messaggio privato da un altro client
@@ -230,7 +233,8 @@ public class ClientStr {
                 System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET
                         + " hai scritto a te stesso: " + mexRicevuto.getCorpo());
             } else {
-                System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
+                System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN
+                        + mexRicevuto.getMittente() + Colori.ANSI_RESET
                         + " ti ha scritto: " + mexRicevuto.getCorpo());
                 // salvo l'ultimo client che mi scritto
                 ultimoDestinatario = mexRicevuto.getMittente();
@@ -240,27 +244,29 @@ public class ClientStr {
         else if (mexRicevuto.getComando().equals("-1")) {
             System.out.println("Lista dei client connessi: ");
             System.out.println(mexRicevuto.getCorpo());
-        } 
-        //chiusura client
+        }
+        // chiusura client
         else if (mexRicevuto.getComando().equals("4")) {
             System.out.println("chiusura client");
             miosocket.close();
             System.exit(1);
-        } 
-        //notifica di chiusura di un client
+        }
+        // notifica di chiusura di un client
         else if (mexRicevuto.getComando().equals("chiusura")) {
-            System.out.println(Colori.ANSI_YELLOW + "Notifica --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET + " si e' Disconnesso.");
-        } 
-        //risposta di un client
+            System.out.println(Colori.ANSI_YELLOW + "Notifica --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN
+                    + mexRicevuto.getMittente() + Colori.ANSI_RESET + " si e' Disconnesso.");
+        }
+        // risposta di un client
         else if (mexRicevuto.getComando().equals("risposta"))
-            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN + mexRicevuto.getMittente() + Colori.ANSI_RESET
-            + " ti ha risposto: " + mexRicevuto.getCorpo());
+            System.out.println(Colori.ANSI_GREEN + "Messaggio --> " + Colori.ANSI_RESET + Colori.ANSI_CYAN
+                    + mexRicevuto.getMittente() + Colori.ANSI_RESET
+                    + " ti ha risposto: " + mexRicevuto.getCorpo());
         // salvo l'ultimo client che mi scritto
         ultimoDestinatario = mexRicevuto.getMittente();
         menuOpzioni();
     }
 
-    public static void chiusuraClient(){
+    public static void chiusuraClient() {
         destinatarioArrayList.add("Server");
         mexInviato.setDestinatario(destinatarioArrayList);
         mexInviato.comando("4");
@@ -268,31 +274,31 @@ public class ClientStr {
 
     public static void menuDestinatari() throws IOException {
         System.out.println("");
-        System.out.println(Colori.ANSI_RED +                  "------------------Menu-Messaggio----------------" + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED + "------------------Menu-Messaggio----------------" + Colori.ANSI_RESET);
         System.out.println(
-                  Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 0 --> Esci                                   "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere a tutti                       "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Scrivere ad una persona                "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Rispondi all'ultima persona in privato "
-                + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
-        System.out.println(Colori.ANSI_RED +                 "------------------------------------------------" + Colori.ANSI_RESET);
+                Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 0 --> Esci                                   "
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere a tutti                       "
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Scrivere ad una persona                "
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Rispondi all'ultima persona in privato "
+                        + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
+        System.out.println(Colori.ANSI_RED + "------------------------------------------------" + Colori.ANSI_RESET);
         System.out.print("Seleziona l'opzione per il destinatario: ");
     }
 
     public static void menuOpzioni() {
         System.out.println("");
-        System.out.println(Colori.ANSI_RED +                  "---------------------Menu---------------------" + Colori.ANSI_RESET);
+        System.out.println(Colori.ANSI_RED + "---------------------Menu---------------------" + Colori.ANSI_RESET);
         System.out.println(
-                  Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere un messaggio                "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Richiedo la lista di utenti connessi "
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
-                + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Chiudi la connessione                "
-                + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
-        System.out.println(Colori.ANSI_RED +                 "----------------------------------------------" + Colori.ANSI_RESET);
+                Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 1 --> Scrivere un messaggio                "
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 2 --> Richiedo la lista di utenti connessi "
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + '\n'
+                        + Colori.ANSI_RED + "|" + Colori.ANSI_RESET + " 3 --> Chiudi la connessione                "
+                        + Colori.ANSI_RESET + Colori.ANSI_RED + "|");
+        System.out.println(Colori.ANSI_RED + "----------------------------------------------" + Colori.ANSI_RESET);
         System.out.print("Seleziona un'opzione: ");
     }
 
