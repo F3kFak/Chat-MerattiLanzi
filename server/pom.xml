@@ -48,7 +48,7 @@
                 <archive>
                 <manifest>
                     <mainClass>
-                        it.fi.itismeucci.chat.App.java
+                        it.fi.itismeucci.chat.App
                     </mainClass>
                 </manifest>
                 </archive>
